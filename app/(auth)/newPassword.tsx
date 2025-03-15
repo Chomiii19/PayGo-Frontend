@@ -2,7 +2,7 @@ import { View, Text, Image, Pressable, TextInput } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { icon } from "../../constants/image";
+import { icons } from "../../constants/image";
 import React from "react";
 import { useRouter } from "expo-router";
 
@@ -38,7 +38,7 @@ const NewPassword = () => {
 
   return (
     <View className="flex-1 justify-center items-center bg-backgroundColor">
-      <Image className="w-16 h-16 mb-5" source={icon} />
+      <Image className="w-16 h-16 mb-5" source={icons.icon} />
       <Text className="font-mBold text-zinc-200 text-2xl text-center mb-8">
         Enter new password
       </Text>

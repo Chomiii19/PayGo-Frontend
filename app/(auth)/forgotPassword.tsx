@@ -2,7 +2,7 @@ import { View, Text, Image, TextInput, Pressable } from "react-native";
 import React from "react";
 import { useRouter } from "expo-router";
 
-import { icon } from "../../constants/image";
+import { icons } from "../../constants/image";
 
 const ForgotPassword = () => {
   const router = useRouter();
@@ -13,7 +13,7 @@ const ForgotPassword = () => {
 
   return (
     <View className="bg-backgroundColor flex-1 justify-center items-center">
-      <Image className="w-16 h-16 mb-5" source={icon} />
+      <Image className="w-16 h-16 mb-5" source={icons.icon} />
       <Text className="font-mBold text-zinc-200 text-2xl w-60 text-center mb-8">
         Forgot Password?
       </Text>

@@ -1,7 +1,7 @@
 import { Stack, useRouter } from "expo-router";
 import React from "react";
 import { Pressable, Image } from "react-native";
-import { back } from "../../constants/image";
+import { icons } from "../../constants/image";
 
 export default function AuthLayout() {
   const router = useRouter();
@@ -10,13 +10,14 @@ export default function AuthLayout() {
     <Stack
       screenOptions={{
         animation: "slide_from_right",
-        contentStyle: { backgroundColor: "#101010" },
+        contentStyle: { backgroundColor: "#16171B" },
         animationDuration: 100,
-        headerStyle: { backgroundColor: "#101010" },
+        headerStyle: { backgroundColor: "#16171B" },
+        headerShadowVisible: false,
         title: "",
         headerLeft: () => (
-          <Pressable onPress={() => router.back()} style={{ padding: 10 }}>
-            <Image source={back} />
+          <Pressable onPress={() => router.back()} style={{ padding: 5 }}>
+            <Image source={icons.back} />
           </Pressable>
         ),
       }}

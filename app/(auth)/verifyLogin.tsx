@@ -1,6 +1,6 @@
 import { View, Text, Image, TextInput, Pressable } from "react-native";
 import React, { useRef, useState } from "react";
-import { icon } from "../../constants/image";
+import { icons } from "../../constants/image";
 import { useRouter } from "expo-router";
 
 const VerifyLogin = () => {
@@ -28,7 +28,7 @@ const VerifyLogin = () => {
 
   return (
     <View className="bg-backgroundColor flex-1 justify-center items-center">
-      <Image className="w-16 h-16 mb-5" source={icon} />
+      <Image className="w-16 h-16 mb-5" source={icons.icon} />
       <Text className="font-mBold text-zinc-200 text-2xl w-60 text-center mb-8">
         Verify that it's you
       </Text>

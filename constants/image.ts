@@ -1,47 +1,51 @@
-const icon = require("../assets/icons/icon.png");
-const back = require("../assets/icons/back.png");
-const fingerprint = require("../assets/icons/fingerprint.png");
-const user = require("../assets/icons/user.png");
-const qrCode = require("../assets/icons/qrCode.png");
-const logOut = require("../assets/icons/logOut.png");
-const visa = require("../assets/icons/visa.png");
-const masterCard = require("../assets/icons/masterCard.png");
-const eye = require("../assets/icons/eye.png");
-const eyeOff = require("../assets/icons/eyeOff.png");
-const contactUser = require("../assets/icons/contactUser.png");
-const plus = require("../assets/icons/plus.png");
-const circleUser = require("../assets/icons/circleUser.png");
-const list = require("../assets/icons/list.png");
-const chartLine = require("../assets/icons/chartLine.png");
-const house = require("../assets/icons/house.png");
-const send = require("../assets/icons/send.png");
-const sendMoney = require("../assets/icons/sendMoney.png");
-const buyLoad = require("../assets/icons/buyLoad.png");
-const payBills = require("../assets/icons/payBills.png");
-const ellipsis = require("../assets/icons/ellipsis.png");
-const bank = require("../assets/icons/bank.png");
-
-export {
-  icon,
-  back,
-  fingerprint,
-  user,
-  qrCode,
-  logOut,
-  visa,
-  masterCard,
-  eye,
-  eyeOff,
-  contactUser,
-  plus,
-  circleUser,
-  list,
-  chartLine,
-  house,
-  send,
-  sendMoney,
-  buyLoad,
-  payBills,
-  ellipsis,
-  bank,
+const icons = {
+  icon: require("../assets/icons/icon.png"),
+  back: require("../assets/icons/back.png"),
+  fingerprint: require("../assets/icons/fingerprint.png"),
+  user: require("../assets/icons/user.png"),
+  qrCode: require("../assets/icons/qrCode.png"),
+  logOut: require("../assets/icons/logOut.png"),
+  visa: require("../assets/icons/visa.png"),
+  masterCard: require("../assets/icons/masterCard.png"),
+  eye: require("../assets/icons/eye.png"),
+  eyeOff: require("../assets/icons/eyeOff.png"),
+  contactUser: require("../assets/icons/contactUser.png"),
+  plus: require("../assets/icons/plus.png"),
+  circleUser: require("../assets/icons/circleUser.png"),
+  list: require("../assets/icons/list.png"),
+  chartLine: require("../assets/icons/chartLine.png"),
+  house: require("../assets/icons/house.png"),
+  send: require("../assets/icons/send.png"),
+  sendMoney: require("../assets/icons/sendMoney.png"),
+  buyLoad: require("../assets/icons/buyLoad.png"),
+  payBills: require("../assets/icons/payBills.png"),
+  ellipsis: require("../assets/icons/ellipsis.png"),
+  bank: require("../assets/icons/bank.png"),
+  bell: require("../assets/icons/bell.png"),
+  arrowUp: require("../assets/icons/arrowUp.png"),
+  wallet: require("../assets/icons/wallet.png"),
+  signal: require("../assets/icons/signal.png"),
+  transfer: require("../assets/icons/transfer.png"),
+  receipt: require("../assets/icons/receipt.png"),
+  dot: require("../assets/icons/dot.png"),
+  receive: require("../assets/icons/receive.png"),
+  piggyBank: require("../assets/icons/piggyBank.png"),
+  verified: require("../assets/icons/verified.png"),
+  settings: require("../assets/icons/settings.png"),
+  addFriend: require("../assets/icons/addFriend.png"),
 };
+
+const images = {
+  profile: require("../assets/images/profile.jpg"),
+  bgBlue: require("../assets/images/pastel_blue_bg.jpeg"),
+  bgBlue1: require("../assets/images/blueBG-1.png"),
+  violet: require("../assets/images/violet.jpg"),
+  violet2: require("../assets/images/bgViolet.jpeg"),
+  bgGreen: require("../assets/images/bgGreen.jpeg"),
+  user1: require("../assets/images/user-1.jpg"),
+  user2: require("../assets/images/user-2.jpg"),
+  user3: require("../assets/images/user-3.jpg"),
+  user4: require("../assets/images/user-4.jpg"),
+};
+
+export { icons, images };

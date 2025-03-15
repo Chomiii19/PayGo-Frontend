@@ -4,7 +4,7 @@ import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter } from "expo-router";
 import * as yup from "yup";
-import { fingerprint, icon } from "../../constants/image";
+import { icons } from "../../constants/image";
 import * as LocalAuthentication from "expo-local-authentication";
 
 const schema = yup.object().shape({
@@ -56,7 +56,7 @@ export default function Index() {
 
   return (
     <View className="flex-1 justify-center items-center bg-backgroundColor">
-      <Image className="w-16 h-16 mb-5" source={icon} />
+      <Image className="w-16 h-16 mb-5" source={icons.icon} />
       <Text className="font-mBold text-zinc-200 text-3xl w-60 text-center mb-4">
         Log in to your Account
       </Text>
@@ -66,7 +66,7 @@ export default function Index() {
           className="bg-light-black border border-zinc-800 flex justify-center items-center rounded-lg p-2 mb-4"
           onPress={handleBiometricAuth}
         >
-          <Image source={fingerprint} />
+          <Image source={icons.fingerprint} />
         </Pressable>
       )}
 
@@ -77,11 +77,10 @@ export default function Index() {
           name="accountNumber"
           render={({ field: { onChange, value } }) => (
             <TextInput
-              className="w-80 bg-light-black border-transparent rounded-lg text-zinc-200 font-mRegular px-2"
+              className="w-80 bg-light-black border-transparent rounded-lg text-zinc-200 font-mRegular p-[10px]"
               keyboardType="numeric"
               onChangeText={onChange}
               value={value}
-              style={{ borderWidth: 1, padding: 10, marginVertical: 5 }}
             />
           )}
         />
@@ -101,12 +100,14 @@ export default function Index() {
           control={control}
           name="password"
           render={({ field: { onChange, value } }) => (
-            <TextInput
-              className="w-80 bg-light-black rounded-lg text-zinc-200 font-mRegular px-2 "
-              secureTextEntry
-              value={value}
-              onChangeText={onChange}
-            ></TextInput>
+            <View className="rounded-lg p-2 bg-light-black">
+              <TextInput
+                className="w-[265px] bg-light-black rounded-lg text-zinc-200 font-mRegular "
+                secureTextEntry
+                value={value}
+                onChangeText={onChange}
+              ></TextInput>
+            </View>
           )}
         />
       </View>

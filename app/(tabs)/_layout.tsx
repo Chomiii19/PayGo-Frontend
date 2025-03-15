@@ -1,18 +1,9 @@
-import { Tabs, useRouter } from "expo-router";
-import { Pressable, View, Text } from "react-native";
+import { Tabs } from "expo-router";
+import { View, Text } from "react-native";
 import { Image } from "react-native";
-import {
-  back,
-  chartLine,
-  circleUser,
-  house,
-  list,
-  send,
-} from "../../constants/image";
+import { icons } from "../../constants/image";
 
 export default function TabsLayout() {
-  const router = useRouter();
-
   return (
     <Tabs
       screenOptions={{
@@ -20,7 +11,7 @@ export default function TabsLayout() {
         tabBarActiveTintColor: "#2682FF",
         tabBarInactiveTintColor: "#CDCDE0",
         tabBarStyle: {
-          backgroundColor: "#181818",
+          backgroundColor: "#16171B",
           borderTopWidth: 0,
           borderTopColor: "#161616",
           height: 60,
@@ -48,7 +39,12 @@ export default function TabsLayout() {
           headerShown: false,
           tabBarItemStyle: { width: 80 },
           tabBarIcon: ({ color, focused }) => (
-            <TabIcon icon={house} color={color} name="Home" focused={focused} />
+            <TabIcon
+              icon={icons.house}
+              color={color}
+              name="Home"
+              focused={focused}
+            />
           ),
         }}
       />
@@ -60,7 +56,7 @@ export default function TabsLayout() {
           tabBarItemStyle: { width: 80 },
           tabBarIcon: ({ color, focused }) => (
             <TabIcon
-              icon={chartLine}
+              icon={icons.chartLine}
               color={color}
               name="Dashboard"
               focused={focused}
@@ -76,7 +72,7 @@ export default function TabsLayout() {
           tabBarItemStyle: { width: 80 },
           tabBarIcon: ({ color, focused }) => (
             <TabIcon
-              icon={send}
+              icon={icons.send}
               color={color}
               name="SendTransaction"
               focused={focused}
@@ -92,7 +88,7 @@ export default function TabsLayout() {
           tabBarItemStyle: { width: 80 },
           tabBarIcon: ({ color, focused }) => (
             <TabIcon
-              icon={list}
+              icon={icons.list}
               color={color}
               name="TransactionHistory"
               focused={focused}
@@ -108,7 +104,7 @@ export default function TabsLayout() {
           tabBarItemStyle: { width: 80 },
           tabBarIcon: ({ color, focused }) => (
             <TabIcon
-              icon={circleUser}
+              icon={icons.circleUser}
               color={color}
               name="Profile"
               focused={focused}
@@ -132,13 +128,22 @@ const TabIcon = ({
   focused: boolean;
 }) => {
   return (
-    <View className="items-center justify-center gap-1 flex-1 w-[5rem]">
+    <View className="items-center justify-center gap-1 flex-1 w-[5rem] relative">
       <Image
         source={icon}
         resizeMode="contain"
         className="w-6 h-6"
         tintColor={color}
       />
+      {focused ? (
+        <Image
+          source={icons.dot}
+          tintColor={color}
+          className="w-7 h-7 absolute -bottom-4"
+        />
+      ) : (
+        <></>
+      )}
     </View>
   );
 };

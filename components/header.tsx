@@ -1,13 +1,13 @@
 import { useRouter } from "expo-router";
 import { Image, Pressable, View, Text } from "react-native";
-import { back, ellipsis } from "../constants/image";
+import { icons } from "../constants/image";
 
 export default function Header({ name }: { name: string }) {
   const router = useRouter();
   return (
-    <View className="w-full bg-light-black justify-between items-center flex flex-row fixed py-2 px-2 border-b border-b-zinc-800">
+    <View className="w-full  justify-between items-center flex flex-row fixed py-2 px-2 border-b border-b-zinc-800">
       <Pressable className="z-10" onPress={() => router.back()}>
-        <Image source={back} />
+        <Image source={icons.back} />
       </Pressable>
 
       <View className="absolute flex items-center w-full">
@@ -15,7 +15,7 @@ export default function Header({ name }: { name: string }) {
       </View>
 
       <Pressable className="z-10">
-        <Image className="w-10 h-10" source={ellipsis} />
+        <Image className="w-10 h-10" source={icons.ellipsis} />
       </Pressable>
     </View>
   );

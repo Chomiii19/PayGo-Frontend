@@ -7,8 +7,9 @@ module.exports = {
     extend: {
       colors: {
         primary: "#2682FF",
-        backgroundColor: "#101010",
-        "light-black": "#161616",
+        backgroundColor: "#16171B",
+        "light-black": "#1D1E27",
+        "lighter-black": "#31343E",
       },
       fontFamily: {
         mBold: ["Manrope-Bold", "sans-serif"],
