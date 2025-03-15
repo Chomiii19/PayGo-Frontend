@@ -1,15 +1,20 @@
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, Image } from "react-native";
 import React from "react";
 import Header from "../../components/header";
 import formatNumber from "../../utils/formatNumber";
+import { icons } from "../../constants/image";
 
 const TransactionDetails = () => {
   return (
     <View className="flex-1 bg-backgroundColor items-center">
       <Header name="Transaction Details" />
 
-      <View className="w-full h-full px-5 items-center flex flex-col mt-10 relative">
-        <View className="rounded-2xl bg-light-black w-full px-4 py-7 flex flex-col items-center">
+      <View className="w-full h-full px-5 items-center flex flex-col mt-14 relative">
+        <View className="rounded-2xl bg-light-black w-full px-4 pt-16 py-7 flex flex-col items-center relative">
+          <Image
+            source={icons.success}
+            className="h-20 w-20 absolute -top-10"
+          />
           <Text className="font-rBold text-3xl text-zinc-200">
             +639123456789
           </Text>
