@@ -5,6 +5,7 @@ import {
   Pressable,
   Image,
   ScrollView,
+  TouchableOpacity,
 } from "react-native";
 import React from "react";
 import Header from "../../components/header";
@@ -57,10 +58,10 @@ function HeadReports() {
       <View className="w-[185px] h-full bg-light-black rounded-2xl p-3 flex flex-col justify-between">
         <View className="w-full flex flex-row items-center justify-between">
           <Text className="text-zinc-400 font-rBold text-sm">ACTIVE LOAN</Text>
-          <Pressable className="flex flex-row items-center gap-1">
+          <TouchableOpacity className="flex flex-row items-center gap-1">
             <Text className="text-primary font-rRegular text-xs">Details</Text>
             <Image source={icons.back} className=" rotate-180 h-4 w-4" />
-          </Pressable>
+          </TouchableOpacity>
         </View>
 
         <View className="w-full flex justify-center items-center">

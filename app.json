@@ -31,6 +31,12 @@
       "bundler": "metro"
     },
     "plugins": [
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow PayGo to access your camera"
+        }
+      ],
       "expo-router",
       [
         "expo-splash-screen",

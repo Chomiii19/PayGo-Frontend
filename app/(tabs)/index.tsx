@@ -5,20 +5,23 @@ import {
   StatusBar,
   ScrollView,
   Pressable,
+  TouchableOpacity,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
-import { useRouter } from "expo-router";
+import { Router, useRouter } from "expo-router";
 import { icons, images } from "../../constants/image";
 import formatNumber from "../../utils/formatNumber";
 import recentTransactions from "../../data/reentTransactions";
 import formatDate from "../../utils/formatDate";
 
 const home = () => {
+  const router = useRouter();
+
   return (
     <ScrollView className="flex-1 bg-backgroundColor flex flex-col w-full">
       <StatusBar barStyle="light-content" backgroundColor="#16171B" />
-      <Header />
+      <Header router={router} />
       <Carousel />
       <View className="px-5 w-full flex flex-col gap-1 mt-1">
         <Reports />
@@ -31,8 +34,7 @@ const home = () => {
   );
 };
 
-function Header() {
-  const router = useRouter();
+function Header({ router }: { router: Router }) {
   return (
     <View className="w-full flex flex-row justify-between bg-backgroundColor items-center py-3 px-5">
       <View className="flex flex-row bg-light-black rounded-xl items-center pr-2 gap-3">
@@ -51,9 +53,12 @@ function Header() {
           <Image className="w-7 h-7 opacity-90" source={icons.bell} />
         </Pressable>
 
-        <Pressable className="bg-lighter-black rounded-2xl p-2">
+        <TouchableOpacity
+          onPress={() => router.push("/(screens)/qrCode")}
+          className="bg-lighter-black rounded-2xl p-2"
+        >
           <Image className="w-9 h-9 opacity-80" source={icons.qrCode} />
-        </Pressable>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -207,10 +212,10 @@ function Contacts() {
     <View className="w-full p-3 flex flex-col mt-3 bg-light-black rounded-2xl gap-3">
       <View className="flex flex-row justify-between w-full">
         <Text className="font-rSemibold text-zinc-200">CONTACTS</Text>
-        <Pressable className="flex flex-row gap-1 items-center">
+        <TouchableOpacity className="flex flex-row gap-1 items-center">
           <Text className="font-rSemibold text-sm text-primary">SEE ALL</Text>
           <Image source={icons.back} className="rotate-180 h-5 w-5" />
-        </Pressable>
+        </TouchableOpacity>
       </View>
 
       <View className="flex flex-row w-full gap-1">
@@ -256,10 +261,10 @@ function RecentTransactions() {
         <Text className="font-rSemibold text-zinc-200">
           RECENT TRANSACTIONS
         </Text>
-        <Pressable className="flex flex-row gap-1 items-center">
+        <TouchableOpacity className="flex flex-row gap-1 items-center">
           <Text className="font-rSemibold text-sm text-primary">SEE ALL</Text>
           <Image source={icons.back} className="rotate-180 h-5 w-5" />
-        </Pressable>
+        </TouchableOpacity>
       </View>
 
       <View className="flex flex-col gap-1 w-full relative">

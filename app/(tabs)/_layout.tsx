@@ -33,7 +33,7 @@ export default function TabsLayout() {
       }}
     >
       <Tabs.Screen
-        name="home"
+        name="index"
         options={{
           title: "Home",
           headerShown: false,
@@ -111,6 +111,18 @@ export default function TabsLayout() {
             />
           ),
         }}
+      />
+      <Tabs.Screen
+        name="buyLoad"
+        options={{ href: null, headerShown: false }}
+      />
+      <Tabs.Screen
+        name="payBills"
+        options={{ href: null, headerShown: false }}
+      />
+      <Tabs.Screen
+        name="transactionDetails"
+        options={{ href: null, headerShown: false }}
       />
     </Tabs>
   );

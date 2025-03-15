@@ -1,16 +1,18 @@
-import { View, Text, Pressable, Image } from "react-native";
+import { View, Text, Pressable, Image, TouchableOpacity } from "react-native";
 import React from "react";
 import Header from "../../components/header";
 import { icons, images } from "../../constants/image";
-import formatNumber from "../../utils/formatNumber";
+import { Router, useRouter } from "expo-router";
 
 const SendTransaction = () => {
+  const router = useRouter();
+
   return (
     <View className="flex-1 bg-backgroundColor items-center">
       <Header name="Send Money" />
 
       <View className="p-5 w-full flex items-center">
-        <Features />
+        <Features router={router} />
         <PayGoBankComponent />
         <OtherBanksComponent />
       </View>
@@ -18,10 +20,10 @@ const SendTransaction = () => {
   );
 };
 
-function Features() {
+function Features({ router }: { router: Router }) {
   return (
     <View className="w-full h-[180px] mt-2 flex flex-row justify-between">
-      <Pressable className="w-[180px] h-full bg-light-black rounded-2xl p-3 flex flex-col justify-between">
+      <View className="w-[180px] h-full bg-light-black rounded-2xl p-3 flex flex-col justify-between">
         <View className="p-3 bg-lighter-black rounded-xl flex w-12 items-center justify-center">
           <Image source={icons.signal} className="h-7 w-7" />
         </View>
@@ -31,18 +33,21 @@ function Features() {
           <Text className="text-zinc-500 font-mRegular text-xs">
             Buy load from TM, Globe, Smart, or TNT.
           </Text>
-          <View className="w-full flex flex-row rounded-2xl bg-primary py-2 items-center justify-center mt-1">
+          <TouchableOpacity
+            onPress={() => router.push("/(tabs)/buyLoad")}
+            className="w-full flex flex-row rounded-2xl bg-primary py-2 items-center justify-center mt-1"
+          >
             <Text className="font-rBold text-zinc-100">Buy Now</Text>
             <Image
               source={icons.back}
               className="rotate-180 h-6 w-6"
               tintColor={"#e3e3e3"}
             />
-          </View>
+          </TouchableOpacity>
         </View>
-      </Pressable>
+      </View>
 
-      <Pressable className="w-[180px] h-full bg-light-black rounded-2xl p-3 flex flex-col justify-between">
+      <View className="w-[180px] h-full bg-light-black rounded-2xl p-3 flex flex-col justify-between">
         <View className="p-3 bg-lighter-black rounded-xl flex w-12 items-center justify-center">
           <Image source={icons.receipt} className="h-7 w-7" />
         </View>
@@ -52,23 +57,26 @@ function Features() {
           <Text className="text-zinc-500 font-mRegular text-xs">
             Pay your bills on Meralco, Maynilad, Converge, or PLDT.
           </Text>
-          <View className="w-full flex flex-row rounded-2xl bg-primary py-2 items-center justify-center mt-1">
+          <TouchableOpacity
+            onPress={() => router.push("/(tabs)/payBills")}
+            className="w-full flex flex-row rounded-2xl bg-primary py-2 items-center justify-center mt-1"
+          >
             <Text className="font-rBold text-zinc-100">Pay Now</Text>
             <Image
               source={icons.back}
               className="rotate-180 h-6 w-6"
               tintColor={"#e3e3e3"}
             />
-          </View>
+          </TouchableOpacity>
         </View>
-      </Pressable>
+      </View>
     </View>
   );
 }
 
 function PayGoBankComponent() {
   return (
-    <Pressable
+    <TouchableOpacity
       className="bg-light-black rounded-2xl w-full h-[170px] mt-7 relative overflow-hidden"
       style={{
         elevation: 10,
@@ -97,13 +105,13 @@ function PayGoBankComponent() {
         className="w-full h-full absolute scale-150"
         style={{ resizeMode: "contain" }}
       />
-    </Pressable>
+    </TouchableOpacity>
   );
 }
 
 function OtherBanksComponent() {
   return (
-    <Pressable
+    <TouchableOpacity
       className="rounded-2xl w-full h-[170px] mt-7 relative overflow-hidden"
       style={{
         elevation: 10,
@@ -132,7 +140,7 @@ function OtherBanksComponent() {
         className="w-full h-full absolute scale-150"
         style={{ resizeMode: "contain" }}
       />
-    </Pressable>
+    </TouchableOpacity>
   );
 }
 

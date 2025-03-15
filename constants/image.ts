@@ -33,6 +33,15 @@ const icons = {
   verified: require("../assets/icons/verified.png"),
   settings: require("../assets/icons/settings.png"),
   addFriend: require("../assets/icons/addFriend.png"),
+  tm: require("../assets/icons/tm.png"),
+  tnt: require("../assets/icons/tnt.png"),
+  globe: require("../assets/icons/globe.png"),
+  smart: require("../assets/icons/smart.png"),
+  philippines: require("../assets/icons/philippines.png"),
+  bookUser: require("../assets/icons/bookUser.png"),
+  check: require("../assets/icons/check.png"),
+  meralco: require("../assets/icons/meralco.png"),
+  success: require("../assets/icons/success.png"),
 };
 
 const images = {
@@ -46,6 +55,7 @@ const images = {
   user2: require("../assets/images/user-2.jpg"),
   user3: require("../assets/images/user-3.jpg"),
   user4: require("../assets/images/user-4.jpg"),
+  myQrCode: require("../assets/images/qrCode.png"),
 };
 
 export { icons, images };

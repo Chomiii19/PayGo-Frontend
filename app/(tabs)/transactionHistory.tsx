@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, Image } from "react-native";
+import { View, Text, ScrollView, Image, TouchableOpacity } from "react-native";
 import React from "react";
 import recentTransactions from "../../data/reentTransactions";
 import formatDate from "../../utils/formatDate";
@@ -13,7 +13,7 @@ const TransactionHistory = () => {
       <ScrollView className="w-full h-full px-5 mt-2 flex flex-col">
         <View className="flex flex-col w-full gap-2">
           {recentTransactions.map((transaction, i) => (
-            <View
+            <TouchableOpacity
               key={i}
               className="w-full flex flex-row justify-between items-center mb-1 bg-light-black rounded-lg px-2.5 py-2.5"
             >
@@ -45,7 +45,7 @@ const TransactionHistory = () => {
                   {formatNumber(transaction.amount)}
                 </Text>
               </View>
-            </View>
+            </TouchableOpacity>
           ))}
         </View>
       </ScrollView>

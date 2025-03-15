@@ -1,8 +1,9 @@
-import { View, Text, Image, Pressable, ScrollView } from "react-native";
+import { View, Text, Image, ScrollView, TouchableOpacity } from "react-native";
 import React from "react";
 import Header from "../../components/header";
 import { icons, images } from "../../constants/image";
 import { useRouter } from "expo-router";
+import InviteFriends from "../../components/inviteFriendsAds";
 
 const Profile = () => {
   return (
@@ -55,59 +56,33 @@ function ProfileContainer() {
   );
 }
 
-function InviteFriends() {
-  return (
-    <View className="w-full px-5 my-6">
-      <View className="w-full h-[100px] relative overflow-hidden rounded-2xl">
-        <View className="h-full w-full bg-black/30 z-30 flex flex-row justify-between items-center  px-4 py-2">
-          <View className="flex flex-col justify-between h-full">
-            <Text className="text-zinc-100 font-rBold text-xl">
-              Invite Friends
-            </Text>
-            <Text className="w-80 text-zinc-300 font-mRegular text-sm">
-              Support us by inviting your friends to join and enjoy seamless
-              banking with us!
-            </Text>
-          </View>
-          <Image source={icons.addFriend} className="h-16 w-16" />
-        </View>
-        <Image
-          source={images.bgGreen}
-          className="w-full h-full absolute scale-150"
-          style={{ resizeMode: "cover" }}
-        />
-      </View>
-    </View>
-  );
-}
-
 function MyAccountTab() {
   return (
-    <Pressable className="w-full flex flex-row items-center justify-between px-3 py-3 bg-light-black rounded-2xl">
+    <TouchableOpacity className="w-full flex flex-row items-center justify-between px-3 py-3 bg-light-black rounded-2xl">
       <View className="flex flex-row gap-2 items-center">
         <Image source={icons.circleUser} className="h-6 w-6" />
         <Text className="text-xl text-zinc-300 font-rSemibold">My Account</Text>
       </View>
       <Image source={icons.back} className="rotate-[270deg] h-6 w-6" />
-    </Pressable>
+    </TouchableOpacity>
   );
 }
 
 function LoanMoneyTab() {
   return (
-    <Pressable className="w-full flex flex-row items-center justify-between px-3 py-3 bg-light-black rounded-2xl">
+    <TouchableOpacity className="w-full flex flex-row items-center justify-between px-3 py-3 bg-light-black rounded-2xl">
       <View className="flex flex-row gap-2 items-center">
         <Image source={icons.receive} className="h-6 w-6" />
         <Text className="text-xl text-zinc-300 font-rSemibold">Loan Money</Text>
       </View>
       <Image source={icons.back} className="rotate-[270deg] h-6 w-6" />
-    </Pressable>
+    </TouchableOpacity>
   );
 }
 
 function SecuritySettingsTab() {
   return (
-    <Pressable className="w-full flex flex-row items-center justify-between px-3 py-3 bg-light-black rounded-2xl">
+    <TouchableOpacity className="w-full flex flex-row items-center justify-between px-3 py-3 bg-light-black rounded-2xl">
       <View className="flex flex-row gap-2 items-center">
         <Image source={icons.settings} className="h-6 w-6" />
         <Text className="text-xl text-zinc-300 font-rSemibold">
@@ -115,14 +90,14 @@ function SecuritySettingsTab() {
         </Text>
       </View>
       <Image source={icons.back} className="rotate-[270deg] h-6 w-6" />
-    </Pressable>
+    </TouchableOpacity>
   );
 }
 
 function LogOutButton() {
   const router = useRouter();
   return (
-    <Pressable
+    <TouchableOpacity
       onPress={() => router.replace("/")}
       className="w-full flex flex-row items-center justify-between px-3 py-3 bg-light-black rounded-2xl mb-24"
     >
@@ -130,7 +105,7 @@ function LogOutButton() {
         <Image source={icons.logOut} className="h-6 w-6" />
         <Text className="text-xl text-zinc-300 font-rSemibold">Log Out</Text>
       </View>
-    </Pressable>
+    </TouchableOpacity>
   );
 }
 
