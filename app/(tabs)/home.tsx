@@ -145,7 +145,7 @@ function Carousel() {
           <Image source={icons.masterCard} className="h-12 w-12" />
 
           <View className="w-full flex flex-col justify-center items-center">
-            <Text className="font-rBold text-zinc-300">Checkings Account:</Text>
+            <Text className="font-rBold text-zinc-300">Savings Account:</Text>
             <View className="flex flex-row gap-1 items-center">
               <Text className="text-zinc-100 font-rBold text-3xl">
                 ₱{formatNumber(7030)}
@@ -354,10 +354,10 @@ function Announcement() {
         <View className="w-[320px] h-full mr-7 rounded-[30px] relative overflow-hidden">
           <View className="h-full w-full absolute p-4 z-10 flex flex-col justify-center">
             <Text className="font-mBold font-bold text-zinc-100 text-2xl w-[250px]">
-              Enjoy 0% loan interest this March!
+              Enjoy 0.03% loan interest this March!
             </Text>
             <Text className="font-mBold text-sm text-zinc-300">
-              Loan now for a minimum of ₱1,000
+              Loan now for a minimum of ₱10,000.00
             </Text>
 
             <Pressable className="flex items-center rounded-full bg-zinc-100 flex-row px-3 py-1 w-36 justify-center mt-6">
