@@ -1,11 +1,4 @@
-import {
-  View,
-  Text,
-  Button,
-  Pressable,
-  Image,
-  TouchableOpacity,
-} from "react-native";
+import { View, Text, Image, TouchableOpacity } from "react-native";
 import { useState } from "react";
 import { CameraView, CameraType, useCameraPermissions } from "expo-camera";
 import { useRouter } from "expo-router";
@@ -27,12 +20,12 @@ function QrCodeScanner() {
         <Text className="text-zinc-400 font-rSemibold">
           We need your permission to show the camera
         </Text>
-        <Pressable
+        <TouchableOpacity
           onPress={requestPermission}
           className="flex justify-center items-center rounded-full py-2 px-3 bg-primary mt-3"
         >
           <Text className="text-zinc-200 font-rBold">GRANT PERMISSION</Text>
-        </Pressable>
+        </TouchableOpacity>
       </View>
     );
   }
