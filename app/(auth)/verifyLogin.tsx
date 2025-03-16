@@ -1,4 +1,11 @@
-import { View, Text, Image, TextInput, Pressable } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  TextInput,
+  Pressable,
+  TouchableOpacity,
+} from "react-native";
 import React, { useRef, useState } from "react";
 import { icons } from "../../constants/image";
 import { useRouter } from "expo-router";
@@ -60,12 +67,12 @@ const VerifyLogin = () => {
             className="w-full h-full bg-backgroundColor/80 z-10 rounded-lg absolute top-1"
           ></View>
         )}
-        <Pressable
+        <TouchableOpacity
           className="w-80 bg-primary flex justify-center items-center rounded-lg mt-4 py-2"
           onPress={onSubmit}
         >
           <Text className="text-zinc-200 font-mBold font-bold">Confirm</Text>
-        </Pressable>
+        </TouchableOpacity>
       </View>
 
       <View className="flex flex-row gap-1 mt-4">

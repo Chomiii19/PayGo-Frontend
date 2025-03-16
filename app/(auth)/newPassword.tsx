@@ -1,4 +1,4 @@
-import { View, Text, Image, Pressable, TextInput } from "react-native";
+import { View, Text, Image, TextInput, TouchableOpacity } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -90,14 +90,14 @@ const NewPassword = () => {
             className="w-full h-full bg-backgroundColor/80 z-10 rounded-lg absolute top-1"
           ></View>
         )}
-        <Pressable
+        <TouchableOpacity
           className="w-80 bg-primary flex justify-center items-center rounded-lg mt-4 py-2"
           onPress={handleSubmit(onSubmit)}
         >
           <Text className="text-zinc-200 font-mBold font-bold">
             Change Password
           </Text>
-        </Pressable>
+        </TouchableOpacity>
       </View>
     </View>
   );

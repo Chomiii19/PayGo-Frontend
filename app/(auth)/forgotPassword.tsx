@@ -1,4 +1,4 @@
-import { View, Text, Image, TextInput, Pressable } from "react-native";
+import { View, Text, Image, TextInput, TouchableOpacity } from "react-native";
 import React from "react";
 import { useRouter } from "expo-router";
 
@@ -26,12 +26,12 @@ const ForgotPassword = () => {
         />
       </View>
 
-      <Pressable
+      <TouchableOpacity
         className="w-80 bg-primary flex justify-center items-center rounded-lg mt-4 py-2"
         onPress={() => onSubmit()}
       >
         <Text className="text-zinc-200 font-mBold font-bold">Send Code</Text>
-      </Pressable>
+      </TouchableOpacity>
     </View>
   );
 };

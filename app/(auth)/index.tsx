@@ -1,4 +1,11 @@
-import { Image, Pressable, Text, TextInput, View } from "react-native";
+import {
+  Image,
+  Pressable,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -89,11 +96,11 @@ export default function Index() {
       <View className="flex flex-col justify-start gap-1">
         <View className="flex w-80 flex-row justify-between">
           <Text className="font-mSemibold text-zinc-200">Password</Text>
-          <Pressable onPress={() => router.push("/forgotPassword")}>
+          <TouchableOpacity onPress={() => router.push("/forgotPassword")}>
             <Text className="text-primary font-mRegular text-sm">
               Forgot Password?
             </Text>
-          </Pressable>
+          </TouchableOpacity>
         </View>
 
         <Controller
@@ -118,12 +125,12 @@ export default function Index() {
         </Text>
       )}
 
-      <Pressable
+      <TouchableOpacity
         className="w-80 bg-primary flex justify-center items-center rounded-lg mt-4 py-2"
         onPress={handleSubmit(onSubmit)}
       >
         <Text className="text-zinc-200 font-mBold font-bold">LOG IN</Text>
-      </Pressable>
+      </TouchableOpacity>
 
       <View className="flex flex-row gap-1 mt-4">
         <Text className="text-zinc-500 font-mRegular text-sm">
