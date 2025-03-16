@@ -43,7 +43,7 @@ const SendPayGo = () => {
             value={accountNumber}
             onChangeText={setAccountNumber}
             placeholderTextColor="#71717a"
-            className="w-full px-4 text-zinc-200 font-rRegular rounded-2xl bg-light-black"
+            className="w-full p-4 text-zinc-200 font-rRegular rounded-2xl bg-light-black"
           />
 
           <Text className="text-zinc-300 font-rSemibold mt-3">Amount</Text>
@@ -51,7 +51,7 @@ const SendPayGo = () => {
             keyboardType="numeric"
             placeholder="0.00"
             placeholderTextColor="#71717a"
-            className="w-full px-4 text-zinc-200 font-rRegular rounded-2xl bg-light-black"
+            className="w-full p-4 text-zinc-200 font-rRegular rounded-2xl bg-light-black"
           />
           <View className="mt-1 flex flex-row w-full justify-center">
             <Text className="text-zinc-500 font-rRegular text-xs text-center">

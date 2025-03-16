@@ -81,7 +81,7 @@ const BuyLoad = () => {
               keyboardType="numeric"
               placeholder="9123456789"
               placeholderTextColor="#71717a"
-              className="w-[80%] px-2 text-zinc-200 font-rRegular rounded-r-2xl bg-light-black"
+              className="w-[80%] px-2 py-4 text-zinc-200 font-rRegular rounded-r-2xl bg-light-black"
             />
             <TouchableOpacity className="absolute right-3">
               <Image
@@ -97,7 +97,7 @@ const BuyLoad = () => {
             keyboardType="numeric"
             placeholder="0.00"
             placeholderTextColor="#71717a"
-            className="w-full px-4 text-zinc-200 font-rRegular rounded-2xl bg-light-black"
+            className="w-full p-4 text-zinc-200 font-rRegular rounded-2xl bg-light-black"
           />
           <View className="mt-1 flex flex-row w-full justify-center">
             <Text className="text-zinc-500 font-rRegular text-xs">
