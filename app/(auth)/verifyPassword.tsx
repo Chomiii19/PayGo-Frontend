@@ -45,7 +45,7 @@ const VerifyLogin = () => {
             <TextInput
               key={i}
               ref={(ref) => (inputs.current[i] = ref)}
-              className="w-[50px] h-[70px] bg-light-black border-zinc-800 rounded-lg text-zinc-200 font-mRegular pl-4 focus:border-primary text-4xl"
+              className="w-[50px] h-[70px] bg-light-black border-transparent rounded-lg text-zinc-200 font-mRegular pl-4 focus:border-primary text-4xl"
               keyboardType="numeric"
               onChangeText={(text) => handleChangeText(text, i)}
               value={digit}

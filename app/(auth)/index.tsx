@@ -63,7 +63,7 @@ export default function Index() {
 
       {isBiometricSupported && hasBiometric && (
         <Pressable
-          className="bg-light-black border border-zinc-800 flex justify-center items-center rounded-lg p-2 mb-4"
+          className="bg-light-black flex justify-center items-center rounded-lg p-2 mb-4"
           onPress={handleBiometricAuth}
         >
           <Image source={icons.fingerprint} />
