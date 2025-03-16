@@ -19,7 +19,10 @@ const home = () => {
   const router = useRouter();
 
   return (
-    <ScrollView className="flex-1 bg-backgroundColor flex flex-col w-full">
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      className="flex-1 bg-backgroundColor flex flex-col w-full"
+    >
       <StatusBar barStyle="light-content" backgroundColor="#16171B" />
       <Header router={router} />
       <Carousel />
@@ -111,9 +114,16 @@ function Carousel() {
 
           <View className="w-full flex flex-col justify-center items-center">
             <Text className="font-rBold text-zinc-300">Checkings Account:</Text>
-            <Text className="text-zinc-100 font-rBold text-3xl">
-              ₱{formatNumber(8027)}
-            </Text>
+            <View className="flex flex-row gap-1 items-center">
+              <Text className="text-zinc-100 font-rBold text-3xl">
+                ₱{formatNumber(8027)}
+              </Text>
+              <Image
+                source={icons.eyeOff}
+                className="h-4 w-4"
+                tintColor={"#d4d4d8"}
+              />
+            </View>
           </View>
 
           <View className="flex flex-row w-full justify-between">
@@ -136,9 +146,16 @@ function Carousel() {
 
           <View className="w-full flex flex-col justify-center items-center">
             <Text className="font-rBold text-zinc-300">Checkings Account:</Text>
-            <Text className="text-zinc-100 font-rBold text-3xl">
-              ₱{formatNumber(7030)}
-            </Text>
+            <View className="flex flex-row gap-1 items-center">
+              <Text className="text-zinc-100 font-rBold text-3xl">
+                ₱{formatNumber(7030)}
+              </Text>
+              <Image
+                source={icons.eyeOff}
+                className="h-4 w-4"
+                tintColor={"#d4d4d8"}
+              />
+            </View>
           </View>
 
           <View className="flex flex-row w-full justify-between">

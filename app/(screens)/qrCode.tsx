@@ -42,7 +42,12 @@ function QrCodeScanner() {
       <CameraView
         style={{ flex: 1 }}
         facing={facing}
-        onBarcodeScanned={() => {}}
+        onBarcodeScanned={(result) => {
+          router.push({
+            pathname: "/(tabs)/sendPayGo",
+            params: { accNum: result.data },
+          });
+        }}
       />
 
       <View className="flex-1 h-full w-full absolute z-20 px-5 py-3">

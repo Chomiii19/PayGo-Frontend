@@ -1,35 +1,35 @@
 import {
   View,
   Text,
-  TouchableOpacity,
   TextInput,
+  TouchableOpacity,
+  Image,
   Pressable,
 } from "react-native";
 import React, { useState } from "react";
-import Header from "../../components/header";
-import { Image } from "react-native";
 import { icons } from "../../constants/image";
-import InviteFriends from "../../components/inviteFriendsAds";
 import { useRouter } from "expo-router";
+import InviteFriends from "../../components/inviteFriendsAds";
+import Header from "../../components/header";
 import Dropdown from "../../components/dropDown";
 
-const BuyLoad = () => {
-  const telcos = ["TM", "TNT", "Globe", "Smart"];
+const SendOtherBank = () => {
+  const banks = ["Gcash", "Metrobank", "Grab", "BDO"];
   const [dropDown, setDropDown] = useState(false);
-  const [selected, setSelected] = useState("TM");
+  const [selected, setSelected] = useState("Gcash");
   const [checked, setChecked] = useState(false);
   const router = useRouter();
 
   return (
     <View className="flex-1 flex-col bg-backgroundColor justify-between">
       <View className="flex flex-col w-full">
-        <Header name="Buy Load" />
+        <Header name="Transfer Money" />
 
         <InviteFriends />
 
         <View className="flex flex-col gap-2 px-5 w-full">
           <Text className="text-zinc-300 font-rSemibold mt-2">
-            Which Telco are you purchasing from?
+            Which Bank are you transferring to?
           </Text>
 
           <View className="w-full relative">
@@ -60,7 +60,7 @@ const BuyLoad = () => {
 
             {dropDown && (
               <Dropdown
-                lists={telcos}
+                lists={banks}
                 dropDown={dropDown}
                 setDropDown={setDropDown}
                 setSelected={setSelected}
@@ -69,30 +69,16 @@ const BuyLoad = () => {
           </View>
 
           <Text className="text-zinc-300 font-rSemibold mt-4">
-            Recepient Number
+            Account Number
           </Text>
+          <TextInput
+            keyboardType="numeric"
+            placeholder="1234567890"
+            placeholderTextColor="#71717a"
+            className="w-full px-4 text-zinc-200 font-rRegular rounded-2xl bg-light-black"
+          />
 
-          <View className="flex flex-row w-full justify-center items-center relative">
-            <View className="h-full w-[20%] justify-center rounded-l-2xl bg-light-black flex flex-row items-center gap-2 pl-2">
-              <Image source={icons.philippines} className="h-6 w-6" />
-              <Text className="font-rSemibold text-zinc-200">+63</Text>
-            </View>
-            <TextInput
-              keyboardType="numeric"
-              placeholder="9123456789"
-              placeholderTextColor="#71717a"
-              className="w-[80%] px-2 text-zinc-200 font-rRegular rounded-r-2xl bg-light-black"
-            />
-            <TouchableOpacity className="absolute right-3">
-              <Image
-                source={icons.bookUser}
-                className="h-6 w-6"
-                tintColor={"#71717a"}
-              />
-            </TouchableOpacity>
-          </View>
-
-          <Text className="text-zinc-300 font-rSemibold mt-3">Load Amount</Text>
+          <Text className="text-zinc-300 font-rSemibold mt-3">Amount</Text>
           <TextInput
             keyboardType="numeric"
             placeholder="0.00"
@@ -100,8 +86,8 @@ const BuyLoad = () => {
             className="w-full px-4 text-zinc-200 font-rRegular rounded-2xl bg-light-black"
           />
           <View className="mt-1 flex flex-row w-full justify-center">
-            <Text className="text-zinc-500 font-rRegular text-xs">
-              Be informed that PayGo charges P2.00 as service fee.
+            <Text className="text-zinc-500 font-rRegular text-xs text-center">
+              Be informed that PayGo charges ₱7.00 as service fee.
             </Text>
           </View>
         </View>
@@ -134,7 +120,7 @@ const BuyLoad = () => {
                 params: {
                   refId: 8018201911,
                   accNum: "639123456789",
-                  type: "load",
+                  type: "bank",
                 },
               });
             }}
@@ -148,4 +134,4 @@ const BuyLoad = () => {
   );
 };
 
-export default BuyLoad;
+export default SendOtherBank;

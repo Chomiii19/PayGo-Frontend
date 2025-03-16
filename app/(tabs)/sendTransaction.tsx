@@ -13,8 +13,8 @@ const SendTransaction = () => {
 
       <View className="p-5 w-full flex items-center">
         <Features router={router} />
-        <PayGoBankComponent />
-        <OtherBanksComponent />
+        <PayGoBankComponent router={router} />
+        <OtherBanksComponent router={router} />
       </View>
     </View>
   );
@@ -74,9 +74,10 @@ function Features({ router }: { router: Router }) {
   );
 }
 
-function PayGoBankComponent() {
+function PayGoBankComponent({ router }: { router: Router }) {
   return (
     <TouchableOpacity
+      onPress={() => router.push("/(tabs)/sendPayGo")}
       className="bg-light-black rounded-2xl w-full h-[170px] mt-7 relative overflow-hidden"
       style={{
         elevation: 10,
@@ -109,9 +110,10 @@ function PayGoBankComponent() {
   );
 }
 
-function OtherBanksComponent() {
+function OtherBanksComponent({ router }: { router: Router }) {
   return (
     <TouchableOpacity
+      onPress={() => router.push("/(tabs)/sendOtherBank")}
       className="rounded-2xl w-full h-[170px] mt-7 relative overflow-hidden"
       style={{
         elevation: 10,

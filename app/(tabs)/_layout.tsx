@@ -124,6 +124,14 @@ export default function TabsLayout() {
         name="transactionDetails"
         options={{ href: null, headerShown: false }}
       />
+      <Tabs.Screen
+        name="sendPayGo"
+        options={{ href: null, headerShown: false }}
+      />
+      <Tabs.Screen
+        name="sendOtherBank"
+        options={{ href: null, headerShown: false }}
+      />
     </Tabs>
   );
 }

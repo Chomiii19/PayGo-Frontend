@@ -1,79 +1,47 @@
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  TextInput,
-  Pressable,
-} from "react-native";
+import { View, Text, TouchableOpacity, TextInput, Image } from "react-native";
 import React, { useState } from "react";
-import Header from "../../components/header";
-import { Image } from "react-native";
 import { icons } from "../../constants/image";
 import InviteFriends from "../../components/inviteFriendsAds";
-import { useRouter } from "expo-router";
-import Dropdown from "../../components/dropDown";
+import Header from "../../components/header";
+import { useLocalSearchParams, useRouter } from "expo-router";
 
-const PayBills = () => {
-  const services = ["Meralco", "Converge", "Maynilad", "PLDT"];
-  const [dropDown, setDropDown] = useState(false);
-  const [selected, setSelected] = useState("Meralco");
+const SendPayGo = () => {
+  const { accNum } = useLocalSearchParams() as { accNum: string };
+  const [accountNumber, setAccountNumber] = useState(accNum || "");
   const [checked, setChecked] = useState(false);
   const router = useRouter();
 
   return (
     <View className="flex-1 flex-col bg-backgroundColor justify-between">
       <View className="flex flex-col w-full">
-        <Header name="Pay Bills" />
+        <Header name="Transfer Money" />
 
         <InviteFriends />
 
         <View className="flex flex-col gap-2 px-5 w-full">
           <Text className="text-zinc-300 font-rSemibold mt-2">
-            Which Service are you paying from?
+            Which Bank are you transferring to?
           </Text>
 
-          <View className="w-full relative">
-            <Pressable
-              onPress={() => setDropDown(!dropDown)}
-              className={`flex flex-row justify-between items-center w-full bg-light-black px-4 py-3 ${
-                dropDown ? "rounded-t-2xl" : "rounded-2xl"
-              }`}
-            >
-              <View className="flex flex-row items-center gap-2">
-                <Image
-                  source={
-                    (icons as Record<string, any>)[selected.toLowerCase()]
-                  }
-                  className="h-8 w-8"
-                />
-                <Text className="text-zinc-200 font-rBold text-lg">
-                  {selected}
-                </Text>
-              </View>
-              <Image
-                source={icons.back}
-                className={`${
-                  dropDown ? "rotate-[90deg]" : "rotate-[270deg]"
-                } h-6 w-6"`}
-              />
-            </Pressable>
-
-            {dropDown && (
-              <Dropdown
-                lists={services}
-                dropDown={dropDown}
-                setDropDown={setDropDown}
-                setSelected={setSelected}
-              />
-            )}
-          </View>
+          <TouchableOpacity
+            disabled
+            className="flex flex-row justify-between items-center w-full bg-light-black px-4 py-3 rounded-2xl opacity-55"
+          >
+            <View className="flex flex-row items-center gap-2">
+              <Image source={icons.icon} className="h-8 w-8" />
+              <Text className="text-zinc-200 font-rBold text-lg">PayGo</Text>
+            </View>
+            <Image source={icons.back} className="rotate-[270deg] h-6 w-6" />
+          </TouchableOpacity>
 
           <Text className="text-zinc-300 font-rSemibold mt-4">
-            Recepient Number
+            Account Number
           </Text>
           <TextInput
             keyboardType="numeric"
             placeholder="1234567890"
+            value={accountNumber}
+            onChangeText={setAccountNumber}
             placeholderTextColor="#71717a"
             className="w-full px-4 text-zinc-200 font-rRegular rounded-2xl bg-light-black"
           />
@@ -86,8 +54,9 @@ const PayBills = () => {
             className="w-full px-4 text-zinc-200 font-rRegular rounded-2xl bg-light-black"
           />
           <View className="mt-1 flex flex-row w-full justify-center">
-            <Text className="text-zinc-500 font-rRegular text-xs">
-              Be informed that PayGo charges P2.00 as service fee.
+            <Text className="text-zinc-500 font-rRegular text-xs text-center">
+              Be informed that PayGo does not charge service fee on PayGo
+              transfers.
             </Text>
           </View>
         </View>
@@ -119,8 +88,8 @@ const PayBills = () => {
                 pathname: "/transactionDetails",
                 params: {
                   refId: 8018201911,
-                  accNum: "901210290",
-                  type: "bills",
+                  accNum: "639123456789",
+                  type: "bank",
                 },
               });
             }}
@@ -134,4 +103,4 @@ const PayBills = () => {
   );
 };
 
-export default PayBills;
+export default SendPayGo;

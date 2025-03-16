@@ -41,7 +41,14 @@ const icons = {
   bookUser: require("../assets/icons/bookUser.png"),
   check: require("../assets/icons/check.png"),
   meralco: require("../assets/icons/meralco.png"),
+  maynilad: require("../assets/icons/maynilad.png"),
+  converge: require("../assets/icons/converge.png"),
+  pldt: require("../assets/icons/pldt.png"),
   success: require("../assets/icons/success.png"),
+  gcash: require("../assets/icons/gcash.png"),
+  grab: require("../assets/icons/grab.png"),
+  metrobank: require("../assets/icons/metrobank.png"),
+  bdo: require("../assets/icons/bdo.png"),
 };
 
 const images = {
