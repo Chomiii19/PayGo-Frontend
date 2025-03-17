@@ -12,13 +12,77 @@ import { icons } from "../../constants/image";
 import InviteFriends from "../../components/inviteFriendsAds";
 import { useRouter } from "expo-router";
 import Dropdown from "../../components/dropDown";
+import axios from "axios";
+import { useUser } from "../../context/userContext";
+import getTokenFromStorage from "../../utils/getTokenFromStorage";
 
 const PayBills = () => {
+  const { user } = useUser();
   const services = ["Meralco", "Converge", "Maynilad", "PLDT"];
+  const payment = ["Checkings", "Savings"];
+  const [paymentSource, setPaymentSource] = useState(false);
+  const [selectedPaymentSource, setSelectedPaymentSource] =
+    useState("Checkings");
   const [dropDown, setDropDown] = useState(false);
   const [selected, setSelected] = useState("Meralco");
   const [checked, setChecked] = useState(false);
+  const [accountNumber, setAccountNumber] = useState<string | undefined>(
+    undefined
+  );
+  const [amount, setAmount] = useState<number | undefined>(undefined);
+  const [error, setError] = useState<string | undefined>(undefined);
   const router = useRouter();
+
+  const onsSubmit = async () => {
+    const token = await getTokenFromStorage();
+    try {
+      const response = await axios.post(
+        "https://paygo-backend-1y0p.onrender.com/api/v1/app/transaction",
+        {
+          service: selected,
+          recepientNumber: accountNumber,
+          amount,
+          type: "pay_bills",
+          payment: selectedPaymentSource,
+        },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      const transactionDetails = response.data.data;
+
+      setSelectedPaymentSource("Checkings");
+      setSelected("Meralco");
+      setAccountNumber(undefined);
+      setAmount(undefined);
+      setChecked(false);
+
+      router.replace({
+        pathname: "/(tabs)/transactionDetails",
+        params: {
+          refId: transactionDetails._id,
+          accNum: transactionDetails.recepientNumber,
+          amount: transactionDetails.amount,
+          type: "bills",
+          service: transactionDetails.service,
+        },
+      });
+    } catch (err) {
+      if (axios.isAxiosError(err)) {
+        console.error("Axios error:", err.response?.data || err.message);
+      } else {
+        console.error("Unknown error:", err);
+      }
+      setError("Error");
+    }
+  };
+
+  const checkSufficientBalance = () => {
+    if (amount === 0 || amount === undefined) return false;
+    if (selectedPaymentSource === "checkings")
+      return (user?.checkingsBal || 0) > (amount || 0);
+
+    return (user?.savingsBal || 0) > (amount || 0);
+  };
 
   return (
     <View className="flex-1 flex-col bg-backgroundColor justify-between">
@@ -69,19 +133,55 @@ const PayBills = () => {
           </View>
 
           <Text className="text-zinc-300 font-rSemibold mt-4">
-            Recepient Number
+            Recipient Number
           </Text>
           <TextInput
-            keyboardType="numeric"
+            keyboardType="number-pad"
             placeholder="1234567890"
+            value={accountNumber}
+            onChangeText={setAccountNumber}
             placeholderTextColor="#71717a"
             className="w-full p-4 text-zinc-200 font-rRegular rounded-2xl bg-light-black"
           />
 
+          <Text className="text-zinc-300 font-rSemibold mt-3">
+            Payment Source
+          </Text>
+          <View className="w-full relative">
+            <Pressable
+              onPress={() => setPaymentSource(!paymentSource)}
+              className={`flex flex-row justify-between items-center w-full bg-light-black px-4 py-3 ${
+                paymentSource ? "rounded-t-2xl" : "rounded-2xl"
+              }`}
+            >
+              <Text className="text-zinc-200 font-rBold text-lg">
+                {selectedPaymentSource}
+              </Text>
+
+              <Image
+                source={icons.back}
+                className={`${
+                  paymentSource ? "rotate-[90deg]" : "rotate-[270deg]"
+                } h-6 w-6"`}
+              />
+            </Pressable>
+
+            {paymentSource && (
+              <Dropdown
+                lists={payment}
+                dropDown={paymentSource}
+                setDropDown={setPaymentSource}
+                setSelected={setSelectedPaymentSource}
+              />
+            )}
+          </View>
+
           <Text className="text-zinc-300 font-rSemibold mt-3">Amount</Text>
           <TextInput
-            keyboardType="numeric"
+            keyboardType="number-pad"
             placeholder="0.00"
+            value={amount ? String(amount) : undefined}
+            onChangeText={(text) => setAmount(text ? Number(text) : 0)}
             placeholderTextColor="#71717a"
             className="w-full p-4 text-zinc-200 font-rRegular rounded-2xl bg-light-black"
           />
@@ -109,21 +209,11 @@ const PayBills = () => {
         </View>
 
         <View className="relative">
-          {!checked && (
+          {(!checked || !accountNumber || !checkSufficientBalance()) && (
             <View className="absolute w-full h-full z-10 bg-backgroundColor/50 rounded-2xl"></View>
           )}
           <TouchableOpacity
-            onPress={() => {
-              setChecked(!checked);
-              router.push({
-                pathname: "/transactionDetails",
-                params: {
-                  refId: 8018201911,
-                  accNum: "901210290",
-                  type: "bills",
-                },
-              });
-            }}
+            onPress={() => onsSubmit()}
             className="mb-24 w-full rounded-2xl flex flex-row justify-center py-2 bg-primary"
           >
             <Text className="text-zinc-200 font-rBold">CONFIRM</Text>

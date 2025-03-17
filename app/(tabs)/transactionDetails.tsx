@@ -6,7 +6,15 @@ import formatNumber from "../../utils/formatNumber";
 import { icons } from "../../constants/image";
 
 const TransactionDetails = () => {
-  const { refId, accNum, type } = useLocalSearchParams();
+  const { refId, accNum, amount, type, service } = useLocalSearchParams();
+
+  const formatDate = (date: Date) => {
+    return new Date(date).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
 
   return (
     <View className="flex-1 bg-backgroundColor items-center">
@@ -27,18 +35,21 @@ const TransactionDetails = () => {
                 {type === "load" && "Telco"}
                 {type === "bills" && "Service"}
                 {type === "bank" && "Bank"}
+                {type === "loan" && "Loan"}
               </Text>
-              <Text className="font-rSemibold text-zinc-200 w-1/2">TM</Text>
+              <Text className="font-rSemibold text-zinc-200 w-1/2">
+                {service}
+              </Text>
             </View>
             <View className="flex flex-row w-full">
               <Text className="font-rSemibold text-zinc-400 w-1/2">Amount</Text>
               <Text className="font-rSemibold text-zinc-200 w-1/2">
-                ₱{formatNumber(2380)}
+                ₱{formatNumber(Number(amount))}
               </Text>
             </View>
           </View>
 
-          <View className="flex flex-row justify-between items-center w-full my-6">
+          <View className="flex flex-col gap-2 w-full my-6">
             <View className="flex flex-row gap-1 items-end">
               <Text className="font-rSemibold text-zinc-400 text-xs">
                 Ref No.
@@ -48,7 +59,7 @@ const TransactionDetails = () => {
             <View className="flex flex-row gap-1 items-end">
               <Text className="font-rSemibold text-zinc-400 text-xs">Date</Text>
               <Text className="font-rSemibold text-zinc-200">
-                March 3, 2025
+                {formatDate(new Date())}
               </Text>
             </View>
           </View>

@@ -4,6 +4,7 @@ import Header from "../../components/header";
 import { icons, images } from "../../constants/image";
 import { useRouter } from "expo-router";
 import InviteFriends from "../../components/inviteFriendsAds";
+import { useUser } from "../../context/userContext";
 
 const Profile = () => {
   return (
@@ -24,6 +25,7 @@ const Profile = () => {
 };
 
 function ProfileContainer() {
+  const { user } = useUser();
   return (
     <>
       <View className="p-4 px-5 w-full">
@@ -47,10 +49,8 @@ function ProfileContainer() {
       </View>
 
       <View className="flex flex-row gap-2 items-center justify-center mt-20">
-        <Text className="text-zinc-100 font-rBold text-3xl">
-          Monkey D. Luffy
-        </Text>
-        <Image source={icons.verified} className="h-7 w-7" />
+        <Text className="text-zinc-100 font-rBold text-3xl">{user?.name}</Text>
+        {user?.email && <Image source={icons.verified} className="h-7 w-7" />}
       </View>
     </>
   );
@@ -63,7 +63,7 @@ function MyAccountTab() {
         <Image source={icons.circleUser} className="h-6 w-6" />
         <Text className="text-xl text-zinc-300 font-rSemibold">My Account</Text>
       </View>
-      <Image source={icons.back} className="rotate-[270deg] h-6 w-6" />
+      <Image source={icons.back} className="rotate-180 h-6 w-6" />
     </TouchableOpacity>
   );
 }
@@ -75,7 +75,7 @@ function LoanMoneyTab() {
         <Image source={icons.receive} className="h-6 w-6" />
         <Text className="text-xl text-zinc-300 font-rSemibold">Loan Money</Text>
       </View>
-      <Image source={icons.back} className="rotate-[270deg] h-6 w-6" />
+      <Image source={icons.back} className="rotate-180 h-6 w-6" />
     </TouchableOpacity>
   );
 }
@@ -89,16 +89,23 @@ function SecuritySettingsTab() {
           Security Settings
         </Text>
       </View>
-      <Image source={icons.back} className="rotate-[270deg] h-6 w-6" />
+      <Image source={icons.back} className="rotate-180 h-6 w-6" />
     </TouchableOpacity>
   );
 }
 
 function LogOutButton() {
+  const { logout } = useUser();
   const router = useRouter();
+
+  const handleLogout = async () => {
+    await logout();
+    router.replace("/(auth)");
+  };
+
   return (
     <TouchableOpacity
-      onPress={() => router.replace("/")}
+      onPress={handleLogout}
       className="w-full flex flex-row items-center justify-between px-3 py-3 bg-light-black rounded-2xl mb-24"
     >
       <View className="flex flex-row gap-2 items-center">

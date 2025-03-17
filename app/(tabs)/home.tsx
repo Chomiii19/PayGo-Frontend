@@ -6,30 +6,71 @@ import {
   ScrollView,
   Pressable,
   TouchableOpacity,
+  RefreshControl,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import React from "react";
+import React, { useCallback, useState } from "react";
 import { Router, useRouter } from "expo-router";
 import { icons, images } from "../../constants/image";
 import formatNumber from "../../utils/formatNumber";
 import recentTransactions from "../../data/reentTransactions";
 import formatDate from "../../utils/formatDate";
+import { useUser } from "../../context/userContext";
+import IUser from "../../@types/userInterfaces";
+import { useFocusEffect } from "@react-navigation/native";
+import { useTransactions } from "../../context/transactionContext";
+import { useExpensesThisMonth } from "../../context/expensesThisMonthContext";
+import { useActiveLoan } from "../../context/activeLoanContext";
 
 const home = () => {
   const router = useRouter();
+  const { user, refreshUser } = useUser();
+  const { refreshTransaction } = useTransactions();
+  const { refreshExpensesThisMonthReport } = useExpensesThisMonth();
+
+  useFocusEffect(
+    useCallback(() => {
+      refreshUser();
+      refreshTransaction();
+      refreshExpensesThisMonthReport();
+    }, [])
+  );
+
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    refreshUser();
+    refreshTransaction();
+    refreshExpensesThisMonthReport();
+
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  }, []);
+
+  if (!user)
+    return (
+      <View className="flex-1 bg-backgroundColor justify-center items-center">
+        <Image source={icons.icon} className="w-16 h-16" />
+      </View>
+    );
 
   return (
     <ScrollView
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
       showsVerticalScrollIndicator={false}
       className="flex-1 bg-backgroundColor flex flex-col w-full"
     >
       <StatusBar barStyle="light-content" backgroundColor="#16171B" />
-      <Header router={router} />
-      <Carousel />
+      <Header user={user} router={router} />
+      <Carousel user={user} />
       <View className="px-5 w-full flex flex-col gap-1 mt-1">
-        <Reports />
+        <Reports user={user} />
         <Contacts />
-        <RecentTransactions />
+        <RecentTransactions user={user} />
       </View>
 
       <Announcement />
@@ -37,7 +78,7 @@ const home = () => {
   );
 };
 
-function Header({ router }: { router: Router }) {
+function Header({ router, user }: { router: Router; user: IUser | null }) {
   return (
     <View className="w-full flex flex-row justify-between bg-backgroundColor items-center py-3 px-5">
       <View className="flex flex-row bg-light-black rounded-xl items-center pr-2 gap-3">
@@ -46,7 +87,9 @@ function Header({ router }: { router: Router }) {
         </View>
 
         <View className="flex flex-row gap-1 items-center">
-          <Text className="font-mBold text-zinc-300">Monkey L.</Text>
+          <Text className="font-mBold text-zinc-300">
+            {user?.name.split(" ")[0]} {user?.name.split(" ")[1]?.charAt(0)}.
+          </Text>
           <Image className="rotate-180 h-5 w-5" source={icons.back} />
         </View>
       </View>
@@ -67,7 +110,8 @@ function Header({ router }: { router: Router }) {
   );
 }
 
-function Carousel() {
+function Carousel({ user }: { user: IUser | null }) {
+  const totalBalance = (user?.checkingsBal || 0) + (user?.savingsBal || 0);
   return (
     <ScrollView
       horizontal
@@ -78,7 +122,7 @@ function Carousel() {
         <Text className="font-mBold text-zinc-500 text-sm">TOTAL BALANCE</Text>
         <View className="flex flex-row gap-2 items-center">
           <Text className="font-mBold text-zinc-200 text-4xl">
-            ₱{formatNumber(15327.92)}
+            ₱{formatNumber(totalBalance)}
           </Text>
           <Image
             source={icons.eyeOff}
@@ -116,7 +160,7 @@ function Carousel() {
             <Text className="font-rBold text-zinc-300">Checkings Account:</Text>
             <View className="flex flex-row gap-1 items-center">
               <Text className="text-zinc-100 font-rBold text-3xl">
-                ₱{formatNumber(8027)}
+                ₱{formatNumber(user?.checkingsBal || 0)}
               </Text>
               <Image
                 source={icons.eyeOff}
@@ -128,7 +172,7 @@ function Carousel() {
 
           <View className="flex flex-row w-full justify-between">
             <Text className="font-mBold text-zinc-200 text-lg">
-              **** *** 1234
+              **** *** {user?.accountNumber.slice(-4)}
             </Text>
             <Image source={icons.visa} className="h-10 w-10" />
           </View>
@@ -148,7 +192,7 @@ function Carousel() {
             <Text className="font-rBold text-zinc-300">Savings Account:</Text>
             <View className="flex flex-row gap-1 items-center">
               <Text className="text-zinc-100 font-rBold text-3xl">
-                ₱{formatNumber(7030)}
+                ₱{formatNumber(user?.savingsBal || 0)}
               </Text>
               <Image
                 source={icons.eyeOff}
@@ -160,7 +204,7 @@ function Carousel() {
 
           <View className="flex flex-row w-full justify-between">
             <Text className="font-mBold text-zinc-200 text-lg">
-              **** *** 1234
+              **** *** {user?.accountNumber.slice(-4)}
             </Text>
             <Image source={icons.visa} className="h-10 w-10" />
           </View>
@@ -175,7 +219,21 @@ function Carousel() {
   );
 }
 
-function Reports() {
+function Reports({ user }: { user: IUser | null }) {
+  const { expensesThisMonthReport } = useExpensesThisMonth();
+  const { pieGraphData } = useActiveLoan();
+  const formatDate = (date: Date) => {
+    return date.toLocaleString("en-US", { month: "short", year: "numeric" });
+  };
+  const daysRemaining = Math.max(
+    0,
+    Math.ceil(
+      (new Date(pieGraphData?.nextDueDate || 0).getTime() -
+        new Date().getTime()) /
+        (1000 * 60 * 60 * 24)
+    )
+  );
+
   return (
     <View className="w-full h-[180px] mt-2 flex flex-row justify-between">
       <View className="w-[180px] h-full bg-light-black rounded-2xl p-3 flex flex-col justify-between">
@@ -188,15 +246,35 @@ function Reports() {
 
         <View className="w-full flex flex-col gap-1">
           <Text className="text-zinc-500 font-mRegular text-xs">
-            Expenses in Mar. 2025
+            Expenses in {formatDate(new Date())}
           </Text>
           <Text className="text-zinc-100 font-rBold text-lg">
-            ₱{formatNumber(23580.5)}
+            ₱{formatNumber(expensesThisMonthReport?.grandTotal)}
           </Text>
           <View className="w-full flex flex-row rounded-full h-2">
-            <View className="bg-yellow-500 w-[40%] h-full rounded-l-full"></View>
-            <View className="bg-purple-500 w-[45%] h-full"></View>
-            <View className="bg-red-400 w-[15%] h-full rounded-r-full"></View>
+            {expensesThisMonthReport.expenses.map((expense, i, arr) => {
+              let color: string = "transparent";
+              if (expense.type === "pay_bills") color = "bg-red-400";
+              if (expense.type === "buy_load") color = "bg-purple-500";
+              if (expense.type === "bank_transfer") color = "bg-yellow-500";
+
+              let borderRadius = "rounded-none";
+              if (arr.length === 1) {
+                borderRadius = "rounded-full";
+              } else if (i === 0) {
+                borderRadius = "rounded-l-full";
+              } else if (i === arr.length - 1) {
+                borderRadius = "rounded-r-full";
+              }
+
+              return (
+                <View
+                  key={i}
+                  style={{ width: `${expense.percentage}%` }}
+                  className={`h-full ${borderRadius} ${color}`}
+                ></View>
+              );
+            })}
           </View>
         </View>
       </View>
@@ -211,11 +289,15 @@ function Reports() {
 
         <View className="w-full flex flex-col gap-1">
           <Text className="text-zinc-200 font-rBold text-lg">
-            -₱{formatNumber(1800)}
+            {pieGraphData.balanceRemaining
+              ? `-₱ ${formatNumber(pieGraphData.balanceRemaining || 0)}`
+              : "₱0.00"}
           </Text>
           <View className="w-full flex flex-row rounded-2xl bg-red-500/20 px-2 py-2 justify-center">
             <Text className="font-mBold text-xs text-red-500">
-              Next payment in 5 days
+              {pieGraphData.balanceRemaining
+                ? `Next payment in ${daysRemaining} days`
+                : "No active loans"}
             </Text>
           </View>
         </View>
@@ -271,7 +353,8 @@ function Contacts() {
   );
 }
 
-function RecentTransactions() {
+function RecentTransactions({ user }: { user: IUser | null }) {
+  const { transactions } = useTransactions();
   return (
     <View className="w-full rounded-2xl p-3 flex flex-col bg-light-black mt-3 gap-1">
       <View className="flex flex-row justify-between w-full">
@@ -284,12 +367,12 @@ function RecentTransactions() {
         </TouchableOpacity>
       </View>
 
-      <View className="flex flex-col gap-1 w-full relative">
+      <View className="flex flex-col gap-1 w-full relative h-[150px]">
         <LinearGradient
           colors={["transparent", "#1D1E27"]}
           className="absolute w-full h-full z-10"
         />
-        {recentTransactions.slice(0, 3).map((transaction, i) => (
+        {transactions.slice(0, 3).map((transaction, i) => (
           <View
             key={i}
             className="w-full flex flex-row justify-between items-center mb-1 rounded-lg px-2 py-1 "
@@ -332,17 +415,20 @@ function RecentTransactions() {
 const renderIcon = (transactionName: string) => {
   if (transactionName[0] === "R") {
     return <Image className="h-7 w-7" source={icons.receive} />;
-  } else if (transactionName[0] === "S") {
+  } else if (transactionName.slice(0, 2) === "Ba") {
     return <Image className="h-7 w-7" source={icons.transfer} />;
   } else if (transactionName[0] === "P") {
     return <Image className="h-7 w-7" source={icons.receipt} />;
-  } else if (transactionName[0] === "B") {
+  } else if (transactionName.slice(0, 2) === "Bu") {
     return <Image className="h-7 w-7" source={icons.signal} />;
+  } else if (transactionName[0] === "L") {
+    return <Image className="h-7 w-7" source={icons.piggyBank} />;
   }
   return null;
 };
 
 function Announcement() {
+  const router = useRouter();
   return (
     <View className="flex flex-col gap-3 mt-6 pl-5 mb-24">
       <Text className="font-rBold text-zinc-200">ANNOUNCEMENTS</Text>
@@ -360,14 +446,17 @@ function Announcement() {
               Loan now for a minimum of ₱10,000.00
             </Text>
 
-            <Pressable className="flex items-center rounded-full bg-zinc-100 flex-row px-3 py-1 w-36 justify-center mt-6">
+            <TouchableOpacity
+              onPress={() => router.push("/(tabs)/applyLoan")}
+              className="flex items-center rounded-full bg-zinc-100 flex-row px-3 py-1 w-36 justify-center mt-6"
+            >
               <Text className="text-blue-400 font-mBold">Loan Now</Text>
               <Image
                 source={icons.back}
                 className="rotate-180"
                 tintColor={"#60a5fa"}
               />
-            </Pressable>
+            </TouchableOpacity>
           </View>
           <Image
             source={images.bgBlue1}

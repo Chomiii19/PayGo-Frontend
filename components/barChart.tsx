@@ -1,13 +1,11 @@
 import { BarChart } from "react-native-gifted-charts";
+import IBarGraphData from "../@types/barGraphInterface";
 
-function TransactionsOverviewGraph() {
-  const barData = [
-    { value: 23091, label: "Transfer", frontColor: "#eab308" },
-    { value: 47980, label: "Receive", frontColor: "#177AD5" },
-    { value: 2010, label: "Load", frontColor: "#a855f7" },
-    { value: 10201, label: "Bills", frontColor: "#f87171" },
-    { value: 16800, label: "Loan", frontColor: "#22c55e" },
-  ];
+function TransactionsOverviewGraph({
+  barGraphData,
+}: {
+  barGraphData: IBarGraphData[];
+}) {
   return (
     <BarChart
       barWidth={40}
@@ -15,13 +13,13 @@ function TransactionsOverviewGraph() {
       barBorderRadius={4}
       frontColor="lightgray"
       color={"#177AD5"}
-      data={barData}
+      data={barGraphData}
       yAxisThickness={0}
       xAxisThickness={0}
       isAnimated
       animationDuration={1000}
-      yAxisLabelTexts={["0", "10k", "20k", "30k", "40k", "50k"]}
       width={500}
+      yAxisLabelTexts={createYAxisLabels(barGraphData)}
       spacing={24}
       xAxisLabelTextStyle={{ color: "#71717a" }}
       yAxisTextStyle={{ color: "#71717a" }}
@@ -29,5 +27,22 @@ function TransactionsOverviewGraph() {
     />
   );
 }
+
+const createYAxisLabels = (data: IBarGraphData[]): string[] => {
+  const maxValue = Math.max(...data.map((item) => item.value));
+
+  const roundedMax =
+    maxValue < 1000
+      ? Math.ceil(maxValue / 100) * 100
+      : Math.ceil(maxValue / 1000) * 1000;
+
+  const labels = [];
+  for (let i = 0; i <= 5; i++) {
+    const labelValue = (roundedMax / 5) * i;
+    labels.push(labelValue >= 1000 ? `${labelValue / 1000}k` : `${labelValue}`);
+  }
+
+  return labels;
+};
 
 export default TransactionsOverviewGraph;

@@ -9,14 +9,31 @@ import {
 import React, { useRef, useState } from "react";
 import { icons } from "../../constants/image";
 import { useRouter } from "expo-router";
+import axios from "axios";
+import getTokenFromStorage from "../../utils/getTokenFromStorage";
 
 const VerifyLogin = () => {
   const router = useRouter();
   const length = 6;
   const [code, setCode] = useState(Array(length).fill(""));
   const inputs = useRef<(TextInput | null)[]>([]);
+  const [error, setError] = useState<string | null>(null);
 
-  const onSubmit = () => router.replace("/(tabs)/home");
+  const onSubmit = async () => {
+    try {
+      if (code.join("").length < 6) return;
+      const authToken = await getTokenFromStorage();
+      const response = await axios.post(
+        "https://paygo-backend-1y0p.onrender.com/api/v1/verify-login",
+        { verificationCode: code.join("") },
+        { headers: { Authorization: `Bearer ${authToken}` } }
+      );
+      setError(null);
+      router.replace("/(tabs)/home");
+    } catch (err) {
+      setError("Incorrect code. Please try again.");
+    }
+  };
 
   const handleChangeText = (text: string, i: number) => {
     if (/^\d?$/.test(text)) {
@@ -59,6 +76,10 @@ const VerifyLogin = () => {
           ))}
         </View>
       </View>
+
+      {error && (
+        <Text className="mt-2 text-red-500 font-mBold text-xs">{error}</Text>
+      )}
 
       <View className="relative">
         {code.join("").length !== 6 && (

@@ -6,6 +6,8 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import axios from "axios";
+import * as SecureStore from "expo-secure-store";
 import React, { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -13,35 +15,60 @@ import { useRouter } from "expo-router";
 import * as yup from "yup";
 import { icons } from "../../constants/image";
 import * as LocalAuthentication from "expo-local-authentication";
+import getTokenFromStorage from "../../utils/getTokenFromStorage";
 
 const schema = yup.object().shape({
-  accountNumber: yup
-    .string()
-    .length(10, "Account number must be 10 digits")
-    .required("Account number is required"),
+  accountNumber: yup.string().min(10).required("Account number is required"),
   password: yup.string().min(4).required("Password is required"),
 });
 
 export default function Index() {
+  const [token, setToken] = useState<string | null>(null);
+  const [biometricsApproved, setBiometricsApproved] = useState<boolean>(false);
   const [hasBiometric, setHasBiometric] = useState(false);
   const [isBiometricSupported, setIsBiometricSupported] = useState(false);
 
   useEffect(() => {
-    LocalAuthentication.hasHardwareAsync().then((result) => {
-      setIsBiometricSupported(result);
-      if (result) {
-        LocalAuthentication.isEnrolledAsync().then((isEnrolled) => {
-          setHasBiometric(isEnrolled);
-        });
+    const initializeAuth = async () => {
+      const authToken = await getTokenFromStorage();
+      setToken(authToken || null);
+
+      try {
+        const response = await axios.get(
+          "https://paygo-backend-1y0p.onrender.com/api/v1/validate-token",
+          { headers: { Authorization: `Bearer ${authToken}` } }
+        );
+
+        setBiometricsApproved(true);
+      } catch (err) {
+        setBiometricsApproved(false);
       }
-    });
+
+      const hardwareAvailable = await LocalAuthentication.hasHardwareAsync();
+      setIsBiometricSupported(hardwareAvailable);
+
+      if (hardwareAvailable) {
+        const isEnrolled = await LocalAuthentication.isEnrolledAsync();
+        setHasBiometric(isEnrolled);
+      }
+    };
+
+    initializeAuth();
   }, []);
 
   const handleBiometricAuth = async () => {
     const result = await LocalAuthentication.authenticateAsync();
     if (result.success) {
-      console.log("Fingerprint authentication successful");
-      router.replace("/verifyLogin");
+      try {
+        const response = await axios.get(
+          "https://paygo-backend-1y0p.onrender.com/api/v1/user/generate-code",
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+
+        router.replace("/verifyLogin");
+      } catch (err) {
+        console.error("Error in regenerating code: ", err);
+      }
     } else {
       console.log("Fingerprint authentication failed");
     }
@@ -56,9 +83,30 @@ export default function Index() {
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = (data: { accountNumber: string; password: string }) => {
-    console.log("Form Data:", data);
-    router.replace("/verifyLogin");
+  const onSubmit = async (data: {
+    accountNumber: string;
+    password: string;
+  }) => {
+    try {
+      console.log("Form Data:", data);
+
+      const response = await axios.post(
+        "https://paygo-backend-1y0p.onrender.com/api/v1/login",
+        data
+      );
+
+      if (!response.data.token) console.error("No token received");
+      setToken(response.data.token);
+      await SecureStore.setItemAsync("authToken", response.data.token);
+
+      router.replace("/verifyLogin");
+    } catch (err) {
+      if (axios.isAxiosError(err)) {
+        console.error("Axios error:", err.response?.data || err.message);
+      } else {
+        console.error("Unknown error:", err);
+      }
+    }
   };
 
   return (
@@ -68,7 +116,7 @@ export default function Index() {
         Log in to your Account
       </Text>
 
-      {isBiometricSupported && hasBiometric && (
+      {token && biometricsApproved && isBiometricSupported && hasBiometric && (
         <Pressable
           className="bg-light-black flex justify-center items-center rounded-lg p-2 mb-4"
           onPress={handleBiometricAuth}
@@ -85,7 +133,7 @@ export default function Index() {
           render={({ field: { onChange, value } }) => (
             <TextInput
               className="w-80 bg-light-black border-transparent rounded-lg text-zinc-200 font-mRegular p-[10px]"
-              keyboardType="numeric"
+              keyboardType="number-pad"
               onChangeText={onChange}
               value={value}
             />
@@ -134,11 +182,13 @@ export default function Index() {
 
       <View className="flex flex-row gap-1 mt-4">
         <Text className="text-zinc-500 font-mRegular text-sm">
-          Having trouble logging in?
+          No account yet?
         </Text>
-        <Pressable onPress={() => router.push("/")}>
-          <Text className="text-primary font-mRegular text-sm">Contact Us</Text>
-        </Pressable>
+        <TouchableOpacity onPress={() => router.push("/(auth)/signup")}>
+          <Text className="text-primary font-mRegular text-sm">
+            Create account
+          </Text>
+        </TouchableOpacity>
       </View>
     </View>
   );

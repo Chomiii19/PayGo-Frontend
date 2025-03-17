@@ -7,7 +7,9 @@
     "icon": "./assets/icons/icon.png",
     "scheme": "paygo",
     "userInterfaceStyle": "automatic",
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "newArchEnabled": true,
     "splash": {
       "image": "./assets/icons/icon.png",
@@ -19,7 +21,10 @@
       "bundleIdentifier": "com.anonymous.paygo"
     },
     "android": {
-      "permissions": ["USE_BIOMETRIC", "USE_FINGERPRINT"],
+      "permissions": [
+        "USE_BIOMETRIC",
+        "USE_FINGERPRINT"
+      ],
       "adaptiveIcon": {
         "foregroundImage": "./assets/icons/icon.png",
         "backgroundColor": "#101010"
@@ -46,7 +51,8 @@
           "resizeMode": "contain",
           "backgroundColor": "#101010"
         }
-      ]
+      ],
+      "expo-secure-store"
     ],
     "experiments": {
       "typedRoutes": true

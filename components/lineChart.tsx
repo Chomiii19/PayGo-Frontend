@@ -1,19 +1,7 @@
 import { LineChart } from "react-native-gifted-charts";
+import { Results } from "../@types/expensesMonthly";
 
-const TotalExpensesGraph = () => {
-  const data = [
-    { value: 15200, label: "Jan" },
-    { value: 28988, label: "Feb" },
-    { value: 12012, label: "Mar" },
-    { value: 8901, label: "Apr" },
-    { value: 37000, label: "May" },
-    { value: 5701, label: "Jun" },
-    { value: 21001, label: "Jul" },
-    { value: 18091, label: "Aug" },
-    { value: 17800, label: "Sep" },
-    { value: 1980, label: "Oct" },
-  ];
-
+const TotalExpensesGraph = ({ data }: { data: Results[] }) => {
   return (
     <LineChart
       data={data}
@@ -31,7 +19,7 @@ const TotalExpensesGraph = () => {
       animateOnDataChange
       animationDuration={1000}
       noOfSections={4}
-      yAxisLabelTexts={["0", "10k", "20k", "30k", "40k"]}
+      yAxisLabelTexts={createYAxisLabels(data)}
       startFillColor="#2682FF"
       endFillColor="#2682FF"
       startOpacity={0.3}
@@ -39,6 +27,26 @@ const TotalExpensesGraph = () => {
       areaChart
     />
   );
+};
+
+const createYAxisLabels = (data: Results[]): string[] => {
+  const maxValue = Math.max(...data.map((item) => item.value));
+  const step = Math.ceil(maxValue / 5);
+
+  const labels: string[] = [];
+
+  for (let i = 0; i < 4; i++) {
+    const labelValue = step * i;
+    labels.push(
+      labelValue >= 1000
+        ? `${(labelValue / 1000).toFixed(0)}k`
+        : `${labelValue}`
+    );
+  }
+
+  labels.push(String(maxValue));
+
+  return labels;
 };
 
 export default TotalExpensesGraph;
