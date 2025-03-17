@@ -76,6 +76,13 @@ const Dashboard = () => {
     }, 2000);
   }, []);
 
+  if (barGraphData.length === 0 || lineGraphData.results.length === 0)
+    return (
+      <View className="flex-1 bg-backgroundColor justify-center items-center">
+        <Image source={icons.icon} className="w-16 h-16" />
+      </View>
+    );
+
   return (
     <ScrollView
       refreshControl={
