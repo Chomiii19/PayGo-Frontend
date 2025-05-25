@@ -13,6 +13,7 @@ const icons = {
   plus: require("../assets/icons/plus.png"),
   circleUser: require("../assets/icons/circleUser.png"),
   list: require("../assets/icons/list.png"),
+  loan: require("../assets/icons/loan.png"),
   chartLine: require("../assets/icons/chartLine.png"),
   house: require("../assets/icons/house.png"),
   send: require("../assets/icons/send.png"),
@@ -49,6 +50,7 @@ const icons = {
   grab: require("../assets/icons/grab.png"),
   metrobank: require("../assets/icons/metrobank.png"),
   bdo: require("../assets/icons/bdo.png"),
+  pen: require("../assets/icons/pen.png"),
 };
 
 const images = {

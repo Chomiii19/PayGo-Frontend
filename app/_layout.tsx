@@ -3,6 +3,8 @@ import "../styles/global.css";
 import { useFonts } from "expo-font";
 import { useEffect } from "react";
 import { UserProvider } from "../context/userContext";
+import * as SystemUI from "expo-system-ui";
+import { SettingsProvider } from "../context/settingsContext";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -23,6 +25,7 @@ export default function RootLayout() {
   });
 
   useEffect(() => {
+    SystemUI.setBackgroundColorAsync("#16171B");
     if (error) throw error;
 
     if (fontsLoaded) SplashScreen.hideAsync();
@@ -31,12 +34,14 @@ export default function RootLayout() {
   if (!fontsLoaded && !error) return null;
 
   return (
-    <UserProvider>
-      <Stack>
-        <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="(screens)" options={{ headerShown: false }} />
-      </Stack>
-    </UserProvider>
+    <SettingsProvider>
+      <UserProvider>
+        <Stack>
+          <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="(screens)" options={{ headerShown: false }} />
+        </Stack>
+      </UserProvider>
+    </SettingsProvider>
   );
 }

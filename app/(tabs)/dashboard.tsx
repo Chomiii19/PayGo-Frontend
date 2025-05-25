@@ -16,7 +16,7 @@ import formatNumber from "../../utils/formatNumber";
 import TransactionsOverviewGraph from "../../components/barChart";
 import LoanChart from "../../components/pieChart";
 import { useExpensesThisMonth } from "../../context/expensesThisMonthContext";
-import { useFocusEffect } from "expo-router";
+import { useFocusEffect, useRouter } from "expo-router";
 import axios from "axios";
 import getTokenFromStorage from "../../utils/getTokenFromStorage";
 import IBarGraphData from "../../@types/barGraphInterface";
@@ -102,6 +102,7 @@ const Dashboard = () => {
 };
 
 function HeadReports() {
+  const router = useRouter();
   const { pieGraphData } = useActiveLoan();
   const { expensesThisMonthReport } = useExpensesThisMonth();
   const formatDate = (date: Date) => {
@@ -162,15 +163,28 @@ function HeadReports() {
       <View className="w-[185px] h-full bg-light-black rounded-2xl p-3 flex flex-col justify-between">
         <View className="w-full flex flex-row items-center justify-between">
           <Text className="text-zinc-400 font-rBold text-sm">ACTIVE LOAN</Text>
-          <TouchableOpacity className="flex flex-row items-center gap-1">
-            <Text className="text-primary font-rRegular text-xs">Details</Text>
-            <Image source={icons.back} className=" rotate-180 h-4 w-4" />
-          </TouchableOpacity>
+          {pieGraphData?.amount ? (
+            <TouchableOpacity
+              onPress={() => router.push("/(tabs)/loanDetails")}
+              className="flex flex-row items-center gap-1"
+            >
+              <Text className="text-primary font-rRegular text-xs">
+                Details
+              </Text>
+              <Image source={icons.back} className=" rotate-180 h-4 w-4" />
+            </TouchableOpacity>
+          ) : (
+            <></>
+          )}
         </View>
 
         <View className="w-full flex justify-center items-center">
-          {pieGraphData.amount ? (
-            <LoanChart />
+          {pieGraphData?.amount ? (
+            <LoanChart
+              innerRadius={30}
+              radius={40}
+              innerCircleColor="#1D1E27"
+            />
           ) : (
             <Text className="text-zinc-300 font-rSemibold">
               No Active Loans
@@ -178,24 +192,33 @@ function HeadReports() {
           )}
         </View>
 
-        <View className="w-full flex flex-row justify-between">
-          <View>
-            <Text className="font-rRegular text-xs text-zinc-500">
-              Total Amount
-            </Text>
-            <Text className="font-rBold text-zinc-200 text-sm">
-              ₱{formatNumber(pieGraphData.amount || 0)}
-            </Text>
+        {pieGraphData?.amount ? (
+          <View className="w-full flex flex-row justify-between">
+            <View>
+              <Text className="font-rRegular text-xs text-zinc-500">
+                Total Amount
+              </Text>
+              <Text className="font-rBold text-zinc-200 text-sm">
+                ₱{formatNumber(pieGraphData?.amount || 0)}
+              </Text>
+            </View>
+            <View>
+              <Text className="font-rRegular text-xs text-zinc-500">
+                Remaining
+              </Text>
+              <Text className="font-rBold text-red-500 text-sm">
+                ₱{formatNumber(pieGraphData?.balanceRemaining || 0)}
+              </Text>
+            </View>
           </View>
-          <View>
-            <Text className="font-rRegular text-xs text-zinc-500">
-              Remaining
-            </Text>
-            <Text className="font-rBold text-red-500 text-sm">
-              ₱{formatNumber(pieGraphData.balanceRemaining || 0)}
-            </Text>
-          </View>
-        </View>
+        ) : (
+          <TouchableOpacity
+            onPress={() => router.push("/(tabs)/applyLoan")}
+            className="flex justify-center items-center rounded-md bg-primary py-1"
+          >
+            <Text className="text-zinc-200 font-mBold text-sm">Loan Now</Text>
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );

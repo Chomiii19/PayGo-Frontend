@@ -1,5 +1,5 @@
 import { Tabs } from "expo-router";
-import { View, Text } from "react-native";
+import { View } from "react-native";
 import { Image } from "react-native";
 import { icons } from "../../constants/image";
 import { TransactionProvider } from "../../context/transactionContext";
@@ -140,6 +140,26 @@ export default function TabsLayout() {
             />
             <Tabs.Screen
               name="applyLoan"
+              options={{ href: null, headerShown: false }}
+            />
+            <Tabs.Screen
+              name="loanDetails"
+              options={{ href: null, headerShown: false }}
+            />
+            <Tabs.Screen
+              name="viewAccount"
+              options={{ href: null, headerShown: false }}
+            />
+            <Tabs.Screen
+              name="settings"
+              options={{ href: null, headerShown: false }}
+            />
+            <Tabs.Screen
+              name="payLoan"
+              options={{ href: null, headerShown: false }}
+            />
+            <Tabs.Screen
+              name="addContacts"
               options={{ href: null, headerShown: false }}
             />
           </Tabs>

@@ -13,7 +13,6 @@ import React, { useCallback, useState } from "react";
 import { Router, useRouter } from "expo-router";
 import { icons, images } from "../../constants/image";
 import formatNumber from "../../utils/formatNumber";
-import recentTransactions from "../../data/reentTransactions";
 import formatDate from "../../utils/formatDate";
 import { useUser } from "../../context/userContext";
 import IUser from "../../@types/userInterfaces";
@@ -21,9 +20,11 @@ import { useFocusEffect } from "@react-navigation/native";
 import { useTransactions } from "../../context/transactionContext";
 import { useExpensesThisMonth } from "../../context/expensesThisMonthContext";
 import { useActiveLoan } from "../../context/activeLoanContext";
+import { useSettings } from "../../context/settingsContext";
 
 const home = () => {
   const router = useRouter();
+  const { refreshPieGraphData } = useActiveLoan();
   const { user, refreshUser } = useUser();
   const { refreshTransaction } = useTransactions();
   const { refreshExpensesThisMonthReport } = useExpensesThisMonth();
@@ -32,6 +33,7 @@ const home = () => {
     useCallback(() => {
       refreshUser();
       refreshTransaction();
+      refreshPieGraphData();
       refreshExpensesThisMonthReport();
     }, [])
   );
@@ -42,6 +44,7 @@ const home = () => {
     setRefreshing(true);
     refreshUser();
     refreshTransaction();
+    refreshPieGraphData();
     refreshExpensesThisMonthReport();
 
     setTimeout(() => {
@@ -69,7 +72,7 @@ const home = () => {
       <Carousel user={user} />
       <View className="px-5 w-full flex flex-col gap-1 mt-1">
         <Reports user={user} />
-        <Contacts />
+        <Contacts user={user} />
         <RecentTransactions user={user} />
       </View>
 
@@ -82,16 +85,31 @@ function Header({ router, user }: { router: Router; user: IUser | null }) {
   return (
     <View className="w-full flex flex-row justify-between bg-backgroundColor items-center py-3 px-5">
       <View className="flex flex-row bg-light-black rounded-xl items-center pr-2 gap-3">
-        <View className="h-16 w-16 overflow-hidden rounded-xl border-2 border-primary">
-          <Image className="h-16 w-16" source={images.profile} />
-        </View>
+        {user?.profilePictureUrl ? (
+          <View className="h-16 w-16 overflow-hidden rounded-xl border-2 border-primary">
+            <Image className="h-16 w-16" source={images.profile} />
+          </View>
+        ) : (
+          <View className="w-16 h-16 rounded-xl bg-lighter-black flex items-center justify-center">
+            <Text className="font-mBold text-zinc-200 text-2xl">
+              {user?.name
+                .split(" ")
+                .map((part) => part[0])
+                .join("")
+                .toUpperCase()}
+            </Text>
+          </View>
+        )}
 
-        <View className="flex flex-row gap-1 items-center">
+        <TouchableOpacity
+          onPress={() => router.push("/(tabs)/viewAccount")}
+          className="flex flex-row gap-1 items-center"
+        >
           <Text className="font-mBold text-zinc-300">
             {user?.name.split(" ")[0]} {user?.name.split(" ")[1]?.charAt(0)}.
           </Text>
           <Image className="rotate-180 h-5 w-5" source={icons.back} />
-        </View>
+        </TouchableOpacity>
       </View>
 
       <View className="flex flex-row items-center gap-4">
@@ -112,6 +130,11 @@ function Header({ router, user }: { router: Router; user: IUser | null }) {
 
 function Carousel({ user }: { user: IUser | null }) {
   const totalBalance = (user?.checkingsBal || 0) + (user?.savingsBal || 0);
+  const [showTotalBalance, setShowTotalBalance] = useState(false);
+  const [showCheckingBalance, setShowCheckingBalance] = useState(false);
+  const [showSavingBalance, setShowSavingBalance] = useState(false);
+  const { hideAccountNumber } = useSettings();
+
   return (
     <ScrollView
       horizontal
@@ -122,20 +145,26 @@ function Carousel({ user }: { user: IUser | null }) {
         <Text className="font-mBold text-zinc-500 text-sm">TOTAL BALANCE</Text>
         <View className="flex flex-row gap-2 items-center">
           <Text className="font-mBold text-zinc-200 text-4xl">
-            ₱{formatNumber(totalBalance)}
+            {showTotalBalance
+              ? `₱${formatNumber(totalBalance)}`
+              : "₱                    "}
           </Text>
-          <Image
-            source={icons.eyeOff}
-            className="h-5 w-5"
-            tintColor={"#71717a"}
-          />
+          <TouchableOpacity
+            onPress={() => setShowTotalBalance(!showTotalBalance)}
+          >
+            <Image
+              source={showTotalBalance ? icons.eyeOff : icons.eye}
+              className="h-5 w-5"
+              tintColor={"#71717a"}
+            />
+          </TouchableOpacity>
         </View>
 
         <View className="flex flex-row gap-2 items-center">
           <View className="flex flex-row gap-1 items-center justify-center p-1 px-3 bg-green-500/15 rounded-xl border border-green-500">
             <Image className="h-4 w-4" source={icons.arrowUp} />
             <Text className="font-mBold text-green-500 text-xs">
-              ₱{formatNumber(512)}
+              ₱{formatNumber(totalBalance)}
             </Text>
           </View>
 
@@ -160,19 +189,27 @@ function Carousel({ user }: { user: IUser | null }) {
             <Text className="font-rBold text-zinc-300">Checkings Account:</Text>
             <View className="flex flex-row gap-1 items-center">
               <Text className="text-zinc-100 font-rBold text-3xl">
-                ₱{formatNumber(user?.checkingsBal || 0)}
+                {showCheckingBalance
+                  ? `₱${formatNumber(user?.checkingsBal || 0)}`
+                  : "₱                    "}
               </Text>
-              <Image
-                source={icons.eyeOff}
-                className="h-4 w-4"
-                tintColor={"#d4d4d8"}
-              />
+              <TouchableOpacity
+                onPress={() => setShowCheckingBalance(!showCheckingBalance)}
+              >
+                <Image
+                  source={showCheckingBalance ? icons.eyeOff : icons.eye}
+                  className="h-4 w-4"
+                  tintColor={"#d4d4d8"}
+                />
+              </TouchableOpacity>
             </View>
           </View>
 
           <View className="flex flex-row w-full justify-between">
             <Text className="font-mBold text-zinc-200 text-lg">
-              **** *** {user?.accountNumber.slice(-4)}
+              {hideAccountNumber
+                ? `**** *** ${user?.accountNumber.slice(-4)}`
+                : user?.accountNumber}
             </Text>
             <Image source={icons.visa} className="h-10 w-10" />
           </View>
@@ -192,19 +229,27 @@ function Carousel({ user }: { user: IUser | null }) {
             <Text className="font-rBold text-zinc-300">Savings Account:</Text>
             <View className="flex flex-row gap-1 items-center">
               <Text className="text-zinc-100 font-rBold text-3xl">
-                ₱{formatNumber(user?.savingsBal || 0)}
+                {showSavingBalance
+                  ? `₱${formatNumber(user?.savingsBal || 0)}`
+                  : "₱                    "}
               </Text>
-              <Image
-                source={icons.eyeOff}
-                className="h-4 w-4"
-                tintColor={"#d4d4d8"}
-              />
+              <TouchableOpacity
+                onPress={() => setShowSavingBalance(!showSavingBalance)}
+              >
+                <Image
+                  source={showSavingBalance ? icons.eyeOff : icons.eye}
+                  className="h-4 w-4"
+                  tintColor={"#d4d4d8"}
+                />
+              </TouchableOpacity>
             </View>
           </View>
 
           <View className="flex flex-row w-full justify-between">
             <Text className="font-mBold text-zinc-200 text-lg">
-              **** *** {user?.accountNumber.slice(-4)}
+              {hideAccountNumber
+                ? `**** *** ${user?.accountNumber.slice(-4)}`
+                : user?.accountNumber}
             </Text>
             <Image source={icons.visa} className="h-10 w-10" />
           </View>
@@ -289,13 +334,13 @@ function Reports({ user }: { user: IUser | null }) {
 
         <View className="w-full flex flex-col gap-1">
           <Text className="text-zinc-200 font-rBold text-lg">
-            {pieGraphData.balanceRemaining
-              ? `-₱ ${formatNumber(pieGraphData.balanceRemaining || 0)}`
+            {pieGraphData?.balanceRemaining
+              ? `-₱ ${formatNumber(pieGraphData?.balanceRemaining || 0)}`
               : "₱0.00"}
           </Text>
           <View className="w-full flex flex-row rounded-2xl bg-red-500/20 px-2 py-2 justify-center">
             <Text className="font-mBold text-xs text-red-500">
-              {pieGraphData.balanceRemaining
+              {pieGraphData?.balanceRemaining
                 ? `Next payment in ${daysRemaining} days`
                 : "No active loans"}
             </Text>
@@ -306,7 +351,9 @@ function Reports({ user }: { user: IUser | null }) {
   );
 }
 
-function Contacts() {
+function Contacts({ user }: { user: IUser | null }) {
+  const router = useRouter();
+
   return (
     <View className="w-full p-3 flex flex-col mt-3 bg-light-black rounded-2xl gap-3">
       <View className="flex flex-row justify-between w-full">
@@ -318,35 +365,32 @@ function Contacts() {
       </View>
 
       <View className="flex flex-row w-full gap-1">
-        <View className="flex items-center justify-center bg-lighter-black rounded-2xl h-[60px] w-[60px]">
+        <TouchableOpacity
+          onPress={() => router.push("/(tabs)/addContacts")}
+          className="flex items-center justify-center bg-lighter-black rounded-2xl h-[60px] w-[60px]"
+        >
           <Image source={icons.plus} className="h-8 w-8" />
-        </View>
+        </TouchableOpacity>
 
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
           className="w-full"
         >
-          <Image
-            className="w-[60px] h-[60px] rounded-2xl mx-2"
-            source={images.user1}
-          ></Image>
-          <Image
-            className="w-[60px] h-[60px] rounded-2xl mx-2"
-            source={images.user2}
-          ></Image>
-          <View className="w-[60px] h-[60px] rounded-2xl mx-2 bg-lighter-black flex items-center justify-center">
-            <Text className="font-mBold text-zinc-200 text-2xl">CK</Text>
-          </View>
-
-          <Image
-            className="w-[60px] h-[60px] rounded-2xl mx-2"
-            source={images.user3}
-          ></Image>
-          <Image
-            className="w-[60px] h-[60px] rounded-2xl mx-2"
-            source={images.user4}
-          ></Image>
+          {user?.contacts.map((contact, i) => (
+            <View
+              key={i}
+              className="w-[60px] h-[60px] rounded-2xl mx-2 bg-lighter-black flex items-center justify-center"
+            >
+              <Text className="font-mBold text-zinc-200 text-2xl">
+                {contact?.name
+                  .split(" ")
+                  .map((part) => part[0])
+                  .join("")
+                  .toUpperCase()}
+              </Text>
+            </View>
+          ))}
         </ScrollView>
       </View>
     </View>
@@ -354,14 +398,19 @@ function Contacts() {
 }
 
 function RecentTransactions({ user }: { user: IUser | null }) {
+  const router = useRouter();
   const { transactions } = useTransactions();
+
   return (
     <View className="w-full rounded-2xl p-3 flex flex-col bg-light-black mt-3 gap-1">
       <View className="flex flex-row justify-between w-full">
         <Text className="font-rSemibold text-zinc-200">
           RECENT TRANSACTIONS
         </Text>
-        <TouchableOpacity className="flex flex-row gap-1 items-center">
+        <TouchableOpacity
+          onPress={() => router.push("/(tabs)/transactionHistory")}
+          className="flex flex-row gap-1 items-center"
+        >
           <Text className="font-rSemibold text-sm text-primary">SEE ALL</Text>
           <Image source={icons.back} className="rotate-180 h-5 w-5" />
         </TouchableOpacity>
@@ -429,6 +478,8 @@ const renderIcon = (transactionName: string) => {
 
 function Announcement() {
   const router = useRouter();
+  const { pieGraphData } = useActiveLoan();
+
   return (
     <View className="flex flex-col gap-3 mt-6 pl-5 mb-24">
       <Text className="font-rBold text-zinc-200">ANNOUNCEMENTS</Text>
@@ -447,7 +498,10 @@ function Announcement() {
             </Text>
 
             <TouchableOpacity
-              onPress={() => router.push("/(tabs)/applyLoan")}
+              onPress={() => {
+                if (!pieGraphData) router.push("/(tabs)/applyLoan");
+                else router.push("/loanDetails");
+              }}
               className="flex items-center rounded-full bg-zinc-100 flex-row px-3 py-1 w-36 justify-center mt-6"
             >
               <Text className="text-blue-400 font-mBold">Loan Now</Text>
@@ -474,14 +528,17 @@ function Announcement() {
               Pay your bills with ease.
             </Text>
 
-            <Pressable className="flex items-center rounded-full bg-zinc-100 flex-row px-3 py-1 w-36 justify-center mt-6">
+            <TouchableOpacity
+              onPress={() => router.push("/(tabs)/payBills")}
+              className="flex items-center rounded-full bg-zinc-100 flex-row px-3 py-1 w-36 justify-center mt-6"
+            >
               <Text className="text-violet-950 font-mBold">Pay Now</Text>
               <Image
                 source={icons.back}
                 className="rotate-180"
                 tintColor={"#2e1065"}
               />
-            </Pressable>
+            </TouchableOpacity>
           </View>
           <Image
             source={images.violet2}

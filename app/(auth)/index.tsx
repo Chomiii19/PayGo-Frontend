@@ -16,6 +16,7 @@ import * as yup from "yup";
 import { icons } from "../../constants/image";
 import * as LocalAuthentication from "expo-local-authentication";
 import getTokenFromStorage from "../../utils/getTokenFromStorage";
+import { useSettings } from "../../context/settingsContext";
 
 const schema = yup.object().shape({
   accountNumber: yup.string().min(10).required("Account number is required"),
@@ -27,6 +28,9 @@ export default function Index() {
   const [biometricsApproved, setBiometricsApproved] = useState<boolean>(false);
   const [hasBiometric, setHasBiometric] = useState(false);
   const [isBiometricSupported, setIsBiometricSupported] = useState(false);
+  const [error, setError] = useState<string | undefined>(undefined);
+  const { enableBiometrics } = useSettings();
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     const initializeAuth = async () => {
@@ -102,7 +106,8 @@ export default function Index() {
       router.replace("/verifyLogin");
     } catch (err) {
       if (axios.isAxiosError(err)) {
-        console.error("Axios error:", err.response?.data || err.message);
+        console.error("Axios error:", err.response?.data || err.response);
+        setError(err.response?.data.message);
       } else {
         console.error("Unknown error:", err);
       }
@@ -116,14 +121,18 @@ export default function Index() {
         Log in to your Account
       </Text>
 
-      {token && biometricsApproved && isBiometricSupported && hasBiometric && (
-        <Pressable
-          className="bg-light-black flex justify-center items-center rounded-lg p-2 mb-4"
-          onPress={handleBiometricAuth}
-        >
-          <Image source={icons.fingerprint} />
-        </Pressable>
-      )}
+      {token &&
+        biometricsApproved &&
+        isBiometricSupported &&
+        hasBiometric &&
+        enableBiometrics && (
+          <Pressable
+            className="bg-light-black flex justify-center items-center rounded-lg p-2 mb-4"
+            onPress={handleBiometricAuth}
+          >
+            <Image source={icons.fingerprint} />
+          </Pressable>
+        )}
 
       <View className="flex flex-col justify-start gap-1 mb-3">
         <Text className="font-mSemibold text-zinc-200">Account Number</Text>
@@ -155,19 +164,28 @@ export default function Index() {
           control={control}
           name="password"
           render={({ field: { onChange, value } }) => (
-            <View className="rounded-lg p-2 bg-light-black">
+            <View className="rounded-lg p-2 bg-light-black relative flex justify-center">
               <TextInput
                 className="w-[265px] bg-light-black rounded-lg text-zinc-200 font-mRegular "
-                secureTextEntry
+                secureTextEntry={!showPassword}
                 value={value}
                 onChangeText={onChange}
-              ></TextInput>
+              />
+              <TouchableOpacity
+                className="absolute right-2"
+                onPress={() => setShowPassword((prev) => !prev)}
+              >
+                <Image
+                  source={showPassword ? icons.eyeOff : icons.eye}
+                  className="h-6 w-6 opacity-80"
+                />
+              </TouchableOpacity>
             </View>
           )}
         />
       </View>
 
-      {(errors.accountNumber || errors.password) && (
+      {(errors.accountNumber || errors.password || error) && (
         <Text className="mt-2 text-red-500 font-mBold text-xs">
           Invalid Credentials.
         </Text>
@@ -179,17 +197,6 @@ export default function Index() {
       >
         <Text className="text-zinc-200 font-mBold font-bold">LOG IN</Text>
       </TouchableOpacity>
-
-      <View className="flex flex-row gap-1 mt-4">
-        <Text className="text-zinc-500 font-mRegular text-sm">
-          No account yet?
-        </Text>
-        <TouchableOpacity onPress={() => router.push("/(auth)/signup")}>
-          <Text className="text-primary font-mRegular text-sm">
-            Create account
-          </Text>
-        </TouchableOpacity>
-      </View>
     </View>
   );
 }

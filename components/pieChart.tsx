@@ -3,16 +3,24 @@ import { Text } from "react-native";
 import ILoan from "../@types/loanInterface";
 import { useActiveLoan } from "../context/activeLoanContext";
 
-const LoanChart = () => {
+const LoanChart = ({
+  innerRadius,
+  innerCircleColor,
+  radius,
+}: {
+  innerRadius: number;
+  innerCircleColor: string;
+  radius: number;
+}) => {
   const { pieGraphData } = useActiveLoan();
   const percentagePaid = (
-    (1 - (pieGraphData.balanceRemaining || 0) / (pieGraphData.amount || 0)) *
+    (1 - (pieGraphData?.balanceRemaining || 0) / (pieGraphData?.amount || 0)) *
     100
   ).toFixed(0);
 
   const paidAmount =
-    (pieGraphData.amount || 0) - (pieGraphData.balanceRemaining || 0);
-  const remainingBalance = pieGraphData.balanceRemaining || 0;
+    (pieGraphData?.amount || 0) - (pieGraphData?.balanceRemaining || 0);
+  const remainingBalance = pieGraphData?.balanceRemaining || 0;
 
   const pieData = [
     { value: paidAmount || 0, color: "#177AD5" },
@@ -21,12 +29,14 @@ const LoanChart = () => {
   return (
     <PieChart
       donut
-      innerRadius={30}
+      innerRadius={innerRadius}
       isAnimated
       animationDuration={300}
-      radius={40}
+      radius={radius}
       data={pieData}
-      innerCircleColor={"#1D1E27"}
+      innerCircleBorderWidth={1}
+      innerCircleBorderColor={"#27272a"}
+      innerCircleColor={innerCircleColor}
       showTextBackground={false}
       centerLabelComponent={() => {
         return (

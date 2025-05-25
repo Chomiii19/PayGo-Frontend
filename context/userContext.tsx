@@ -25,6 +25,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const fetchUserData = async () => {
     try {
       const authToken = await getTokenFromStorage();
+      console.log("AUTHTOKEN:", authToken);
       const res = await axios.get(
         "https://paygo-backend-1y0p.onrender.com/api/v1/user/get-user",
         { headers: { Authorization: `Bearer ${authToken}` } }
@@ -57,6 +58,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const handleAppStateChange = (nextAppState: string) => {
     if (nextAppState === "background") {
       console.log("App moved to background, starting logout timer...");
+      // @ts-ignore
       logoutTimer = setTimeout(() => {
         resetUser();
       }, 2 * 60 * 1000);

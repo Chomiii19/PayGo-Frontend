@@ -2,11 +2,14 @@ import { View, Text, Image, ScrollView, TouchableOpacity } from "react-native";
 import React from "react";
 import Header from "../../components/header";
 import { icons, images } from "../../constants/image";
-import { useRouter } from "expo-router";
+import { Router, useRouter } from "expo-router";
 import InviteFriends from "../../components/inviteFriendsAds";
 import { useUser } from "../../context/userContext";
+import { useActiveLoan } from "../../context/activeLoanContext";
 
 const Profile = () => {
+  const router = useRouter();
+
   return (
     <ScrollView className="flex-1 bg-backgroundColor flex-col">
       <Header name="Account Details" />
@@ -15,9 +18,9 @@ const Profile = () => {
       <InviteFriends />
 
       <View className="w-full flex flex-col gap-3 px-5">
-        <MyAccountTab />
-        <LoanMoneyTab />
-        <SecuritySettingsTab />
+        <MyAccountTab router={router} />
+        <LoanMoneyTab router={router} />
+        <SecuritySettingsTab router={router} />
         <LogOutButton />
       </View>
     </ScrollView>
@@ -39,10 +42,22 @@ function ProfileContainer() {
           </View>
           <View className="w-full absolute justify-center flex items-center top-24 z-10">
             <View className="bg-backgroundColor rounded-full p-2 w-auto">
-              <Image
-                className="h-44 w-44 rounded-full"
-                source={images.profile}
-              />
+              {user?.profilePictureUrl ? (
+                <Image
+                  className="h-44 w-44 rounded-full"
+                  source={images.profile}
+                />
+              ) : (
+                <View className="h-44 w-44 rounded-full bg-lighter-black flex items-center justify-center">
+                  <Text className="font-mBold text-zinc-200 text-5xl">
+                    {user?.name
+                      .split(" ")
+                      .map((part) => part[0])
+                      .join("")
+                      .toUpperCase()}
+                  </Text>
+                </View>
+              )}
             </View>
           </View>
         </View>
@@ -56,9 +71,12 @@ function ProfileContainer() {
   );
 }
 
-function MyAccountTab() {
+function MyAccountTab({ router }: { router: Router }) {
   return (
-    <TouchableOpacity className="w-full flex flex-row items-center justify-between px-3 py-3 bg-light-black rounded-2xl">
+    <TouchableOpacity
+      onPress={() => router.push("/(tabs)/viewAccount")}
+      className="w-full flex flex-row items-center justify-between px-3 py-3 bg-light-black rounded-2xl"
+    >
       <View className="flex flex-row gap-2 items-center">
         <Image source={icons.circleUser} className="h-6 w-6" />
         <Text className="text-xl text-zinc-300 font-rSemibold">My Account</Text>
@@ -68,9 +86,17 @@ function MyAccountTab() {
   );
 }
 
-function LoanMoneyTab() {
+function LoanMoneyTab({ router }: { router: Router }) {
+  const { pieGraphData } = useActiveLoan();
+
   return (
-    <TouchableOpacity className="w-full flex flex-row items-center justify-between px-3 py-3 bg-light-black rounded-2xl">
+    <TouchableOpacity
+      onPress={() => {
+        if (!pieGraphData) router.push("/(tabs)/applyLoan");
+        else router.push("/loanDetails");
+      }}
+      className="w-full flex flex-row items-center justify-between px-3 py-3 bg-light-black rounded-2xl"
+    >
       <View className="flex flex-row gap-2 items-center">
         <Image source={icons.receive} className="h-6 w-6" />
         <Text className="text-xl text-zinc-300 font-rSemibold">Loan Money</Text>
@@ -80,9 +106,12 @@ function LoanMoneyTab() {
   );
 }
 
-function SecuritySettingsTab() {
+function SecuritySettingsTab({ router }: { router: Router }) {
   return (
-    <TouchableOpacity className="w-full flex flex-row items-center justify-between px-3 py-3 bg-light-black rounded-2xl">
+    <TouchableOpacity
+      onPress={() => router.push("/(tabs)/settings")}
+      className="w-full flex flex-row items-center justify-between px-3 py-3 bg-light-black rounded-2xl"
+    >
       <View className="flex flex-row gap-2 items-center">
         <Image source={icons.settings} className="h-6 w-6" />
         <Text className="text-xl text-zinc-300 font-rSemibold">

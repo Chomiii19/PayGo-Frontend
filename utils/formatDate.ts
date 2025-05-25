@@ -1,15 +1,18 @@
-const formatDate = (timestamp: string) => {
+const formatDate = (timestamp: string, includeTime: boolean = true) => {
   const date = new Date(timestamp);
 
-  const options = {
+  const options: Intl.DateTimeFormatOptions = {
     weekday: "short",
     year: "numeric",
     month: "long",
     day: "numeric",
-    hour: "numeric",
-    minute: "numeric",
-    hour12: true,
   };
+
+  if (includeTime) {
+    options.hour = "numeric";
+    options.minute = "numeric";
+    options.hour12 = true;
+  }
 
   //@ts-ignore
   return new Intl.DateTimeFormat("en-US", options).format(date);

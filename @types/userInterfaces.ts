@@ -1,3 +1,8 @@
+interface IContact {
+  name: string;
+  contactNumber: string;
+}
+
 interface IUser {
   _id: number;
   name: string;
@@ -6,7 +11,8 @@ interface IUser {
   checkingsBal: number;
   savingsBal: number;
   password: string;
-  contacts: string[];
+  contacts: IContact[];
+  profilePictureUrl: string;
   verificationCode: { code: String; expiresAt: Date };
 }
 
