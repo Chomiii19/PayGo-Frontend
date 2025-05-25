@@ -164,7 +164,7 @@ export default function Index() {
           control={control}
           name="password"
           render={({ field: { onChange, value } }) => (
-            <View className="rounded-lg p-2 bg-light-black relative flex justify-center">
+            <View className="rounded-lg bg-light-black relative flex justify-center">
               <TextInput
                 className="w-[265px] bg-light-black rounded-lg text-zinc-200 font-mRegular "
                 secureTextEntry={!showPassword}
